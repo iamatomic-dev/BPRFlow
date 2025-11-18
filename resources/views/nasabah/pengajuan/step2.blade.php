@@ -1,0 +1,149 @@
+<x-layouts.nasabah :title="'Pengajuan Kredit'">
+    <x-slot name="header">
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold">Form Pengajuan Kredit</h1>
+            <span class="text-sm text-gray-500 ms-4 pt-1">Step 2 dari 3</span>
+        </div>
+    </x-slot>
+
+    <section id="pengajuan" class="bg-white rounded-2xl shadow-md p-8 mx-auto" x-data="{
+        menikah: '{{ $application->nasabahProfile->status_perkawinan ?? '' }}' === 'Menikah',
+        maxJangkaWaktu: null,
+        jangkaWaktu: '{{ old('jangka_waktu', $application->jangka_waktu ?? '') }}',
+        facilities: {{ Js::from($facilities->map(fn($f) => ['id' => $f->id, 'nama' => $f->nama, 'max' => $f->max_jangka_waktu])) }},
+        updateMaxJangka(id) {
+            const f = this.facilities.find(f => f.id == id);
+            this.maxJangkaWaktu = f ? f.max : null;
+        }
+    }"
+        x-init="updateMaxJangka($refs.facility.value)">
+        <h2 class="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">Fasilitas Kredit</h2>
+
+        <form method="POST" action="{{ route('pengajuan.step2.post') }}">
+            @csrf
+
+            {{-- Fasilitas Kredit --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- Jenis Fasilitas Kredit --}}
+                <div>
+                    <label for="credit_facility_id" class="block text-sm font-medium text-gray-700 mb-1">
+                        Jenis Fasilitas Kredit <span class="text-red-500">*</span>
+                    </label>
+                    <select x-ref="facility" id="credit_facility_id" name="credit_facility_id"
+                        class="border-gray-300 rounded-md w-full" x-on:change="updateMaxJangka($event.target.value)">
+                        <option value="">-- Pilih Fasilitas --</option>
+                        @foreach ($facilities as $facility)
+                            <option value="{{ $facility->id }}"
+                                {{ old('credit_facility_id', $application->credit_facility_id) == $facility->id ? 'selected' : '' }}>
+                                {{ $facility->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <x-text-input name="jumlah_pinjaman" label="Jumlah Pinjaman (Rp)" type="number" required
+                    :value="old('jumlah_pinjaman', $application->jumlah_pinjaman)" />
+
+                {{-- Jangka Waktu --}}
+                <div>
+                    <label for="jangka_waktu" class="block text-sm font-medium text-gray-700 mb-1">
+                        Jangka Waktu (bulan) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="jangka_waktu" id="jangka_waktu"
+                        class="w-full border-gray-300 rounded-md" x-model="jangkaWaktu"
+                        x-bind:placeholder="maxJangkaWaktu ? `Maksimum ${maxJangkaWaktu} bulan` : 'Masukkan jangka waktu'"
+                        x-bind:max="maxJangkaWaktu" required />
+                    <template x-if="maxJangkaWaktu">
+                        <p class="text-xs text-gray-500 mt-1">
+                            Batas maksimal: <span x-text="maxJangkaWaktu"></span> bulan
+                        </p>
+                    </template>
+
+                    @error('jangka_waktu')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+
+                <x-select-input name="sumber_pendapatan" label="Sumber Pendapatan" :options="['Karyawan' => 'Karyawan', 'Wirausaha' => 'Wirausaha']" :value="$application->sumber_pendapatan"
+                    required />
+                <x-textarea-input name="tujuan_pinjaman" label="Tujuan Penggunaan Pinjaman" required
+                    :value="$application->tujuan_pinjaman" />
+            </div>
+
+            {{-- Data Pasangan (jika menikah) --}}
+            <template x-if="menikah">
+                <div class="mt-3 pt-8">
+                    <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Data Pasangan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <x-text-input name="nama_pasangan" label="Nama Pasangan" :value="old('nama_pasangan', $application->detail->nama_pasangan ?? '')" required />
+                        <x-text-input name="no_ktp_pasangan" label="No KTP Pasangan" :value="old('no_ktp_pasangan', $application->detail->no_ktp_pasangan ?? '')" required />
+                        <x-textarea-input name="alamat_tinggal_pasangan" label="Alamat Tinggal Pasangan" required
+                            :value="$application->detail->alamat_tinggal_pasangan" />
+                        <x-textarea-input name="alamat_ktp_pasangan" label="Alamat Tinggal Pasangan KTP" required
+                            :value="$application->detail->alamat_ktp_pasangan" />
+                        <x-text-input name="no_hp_pasangan" label="Nomor HP Pasangan" :value="old('no_hp_pasangan', $application->detail->no_hp_pasangan ?? '')" required />
+                        <x-text-input name="email_pasangan" label="Email Pasangan" :value="old('email_pasangan', $application->detail->email_pasangan ?? '')" required />
+                        <x-text-input name="pekerjaan_pasangan" label="Pekerjaan Pasangan" :value="old('pekerjaan_pasangan', $application->detail->pekerjaan_pasangan ?? '')"
+                            required />
+                    </div>
+                </div>
+            </template>
+
+            {{-- Data Penjamin --}}
+            <div class="mt-3 pt-8">
+                <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Data Penjamin</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <x-text-input name="nama_penjamin" label="Nama Penjamin"
+                        value="{{ old('nama_penjamin', $application->detail->nama_penjamin ?? '') }}" required />
+                    <x-text-input name="no_ktp_penjamin" label="No KTP Penjamin"
+                        value="{{ old('no_ktp_penjamin', $application->detail->no_ktp_penjamin ?? '') }}" required />
+                    <x-select-input name="hubungan_penjamin" label="Hubungan dengan Pemohon" :options="[
+                        'Orang Tua' => 'Orang Tua',
+                        'Saudara' => 'Saudara',
+                        'Teman' => 'Teman',
+                    ]"
+                        :value="$application->detail->hubungan_penjamin" required />
+                    <x-text-input name="no_hp_penjamin" label="Nomor HP Penjamin"
+                        value="{{ old('no_hp_penjamin', $application->detail->no_hp_penjamin ?? '') }}" required />
+                    <x-text-input name="email_penjamin" label="Email Penjamin" type="email"
+                        value="{{ old('email_penjamin', $application->detail->email_penjamin ?? '') }}" required />
+                    <x-textarea-input name="alamat_penjamin" label="Alamat Penjamin" required :value="$application->detail->alamat_penjamin" />
+                </div>
+            </div>
+
+            {{-- Navigasi --}}
+            <div class="pt-8 mt-8 border-t text-right">
+                <a href="{{ route('pengajuan.back.step1') }}"
+                    class="bg-gray-200 text-gray-800 px-6 py-3 rounded-xl hover:bg-gray-300 transition">
+                    ← Kembali
+                </a>
+                <button type="submit"
+                    class="bg-blue-600 text-white font-semibold px-6 py-3 ms-2 rounded-xl hover:bg-blue-700 transition">
+                    Lanjut →
+                </button>
+            </div>
+        </form>
+    </section>
+
+    {{-- Notifikasi NPWP --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const jumlahInput = document.querySelector('input[name="jumlah_pinjaman"]');
+            const npwpNotice = document.createElement('p');
+            npwpNotice.className = "text-xs text-blue-600 mt-2 hidden";
+            npwpNotice.innerText =
+                "* Pastikan No. NPWP diisi di formulir sebelumnya, untuk jumlah pinjaman lebih dari Rp50.000.000.";
+            jumlahInput.parentNode.appendChild(npwpNotice);
+
+            jumlahInput.addEventListener("input", function() {
+                const value = parseFloat(this.value.replace(/\D/g, "")) || 0;
+                if (value > 50000000) {
+                    npwpNotice.classList.remove('hidden');
+                } else {
+                    npwpNotice.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</x-layouts.nasabah>

@@ -3,7 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\User\PengajuanKreditController as UserPengajuanKreditController;
+use App\Http\Controllers\Nasabah\PengajuanKreditController;
+use App\Http\Controllers\Nasabah\StatusKreditController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\ManagerController;
@@ -16,16 +17,38 @@ use App\Http\Controllers\Dashboard\DirekturController;
 */
 
 Route::get('/', function () {
-    // Bisa redirect ke login atau welcome
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 // ====================== NASABAH ======================
 Route::middleware(['auth', 'role:Nasabah', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('nasabah.dashboard');
-    Route::get('/pengajuan', [UserPengajuanKreditController::class, 'index'])->name('pengajuan.index');
-    Route::post('/pengajuan', [UserPengajuanKreditController::class, 'store'])->name('pengajuan.store');
+    Route::get('/nasabah/dashboard', [DashboardController::class, 'index'])->name('nasabah.dashboard');
 });
+
+Route::middleware(['auth', 'role:Nasabah'])
+    ->prefix('pengajuan')
+    ->name('pengajuan.')
+    ->group(function () {
+        Route::get('/step-1', [PengajuanKreditController::class, 'createStep1'])->name('step1');
+        Route::post('/step-1', [PengajuanKreditController::class, 'postStep1'])->name('step1.post');
+
+        Route::get('/step-2', [PengajuanKreditController::class, 'createStep2'])->name('step2');
+        Route::post('/step-2', [PengajuanKreditController::class, 'postStep2'])->name('step2.post');
+        Route::get('/back-step-1', [PengajuanKreditController::class, 'backToStep1'])->name('back.step1');
+
+        Route::get('/step-3', [PengajuanKreditController::class, 'createStep3'])->name('step3');
+        Route::post('/step-3', [PengajuanKreditController::class, 'postStep3'])->name('step3.post');
+        Route::post('/upload-temp', [PengajuanKreditController::class, 'uploadTemp'])->name('upload.temp');
+        Route::get('/back-step-2', [PengajuanKreditController::class, 'backToStep2'])->name('back.step2');
+
+        Route::get('/review', [PengajuanKreditController::class, 'review'])->name('review');
+        Route::get('/back-step-3', [PengajuanKreditController::class, 'backToStep3'])->name('back.step3');
+
+        Route::post('/submit', [PengajuanKreditController::class, 'submit'])->name('submit');
+
+
+        Route::get('/status-kredit', [StatusKreditController::class, 'index'])->name('status-kredit');
+    });
 
 // ====================== ADMIN ======================
 Route::middleware(['auth', 'role:Admin'])->group(function () {

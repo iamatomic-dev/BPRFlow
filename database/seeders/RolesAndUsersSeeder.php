@@ -19,10 +19,10 @@ class RolesAndUsersSeeder extends Seeder
 
         // Buat user dummy untuk tiap role
         $users = [
-            ['name' => 'Administrator', 'email' => 'admin@gmail.com', 'password' => 'pw123', 'role' => 'Admin'],
-            ['name' => 'Manager BPR', 'email' => 'manager@gmail.com', 'password' => 'pw123', 'role' => 'Manager'],
-            ['name' => 'Direktur BPR', 'email' => 'direktur@gmail.com', 'password' => 'pw123', 'role' => 'Direktur'],
-            ['name' => 'Nasabah Dummy', 'email' => 'nasabah@gmail.com', 'password' => 'pw123', 'role' => 'Nasabah'],
+            ['name' => 'Administrator', 'email' => 'admin@gmail.com', 'password' => 'passwd123', 'role' => 'Admin'],
+            ['name' => 'Manager BPR', 'email' => 'manager@gmail.com', 'password' => 'passwd123', 'role' => 'Manager'],
+            ['name' => 'Direktur BPR', 'email' => 'direktur@gmail.com', 'password' => 'passwd123', 'role' => 'Direktur'],
+            ['name' => 'Nasabah Dummy', 'email' => 'nasabah@gmail.com', 'password' => 'psswd123', 'role' => 'Nasabah'],
         ];
 
         foreach ($users as $data) {

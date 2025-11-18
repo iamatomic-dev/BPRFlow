@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -32,8 +33,9 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'g-recaptcha-response' => ['required', 'captcha'],
         ]);
 
         $user = User::create([
@@ -42,10 +44,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $nasabahRole = Role::firstOrCreate(['name' => 'Nasabah']);
+        $user->assignRole($nasabahRole);
         event(new Registered($user));
-
         Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('nasabah.dashboard');
     }
 }

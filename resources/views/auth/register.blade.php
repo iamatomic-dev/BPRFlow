@@ -56,7 +56,7 @@
 
             <!-- Name -->
             <div class="mb-4">
-                <label for="name" class="block text-gray-700 font-medium">Name</label>
+                <label for="name" class="block text-gray-700 font-medium">Full Name</label>
                 <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
                     class="w-full mt-2 border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:ring-yellow-400 focus:border-yellow-400">
             </div>
