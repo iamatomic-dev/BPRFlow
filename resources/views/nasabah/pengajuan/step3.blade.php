@@ -11,7 +11,7 @@
         statusRumah: '{{ $application->nasabahProfile->status_rumah ?? '' }}',
         sumberPendapatan: '{{ $application->sumber_pendapatan ?? '' }}',
         jumlahPinjaman: {{ $application->jumlah_pinjaman ?? 0 }},
-        jenisAgunan: '{{ old('jenis_agunan') }}'
+        jenisAgunan: '{{ old('jenis_agunan', $collateral->jenis_agunan ?? '') }}'
     }">
 
         @if ($errors->any())
@@ -34,40 +34,50 @@
                 <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Dokumen Identitas & Tempat Tinggal
                 </h3>
 
+                @php
+                    // Helper untuk mendapatkan path
+                    $get_path = function ($key) use ($dokumenMap) {
+                        return $dokumenMap[$key]->path ?? null;
+                    };
+                @endphp
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
-                    <x-input-file label="KTP Pemohon" name="dokumen[ktp_pemohon_path]" accept="image/*,.pdf"
-                        required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
-                    <x-input-file label="Kartu Keluarga" name="dokumen[kartu_keluarga_path]" accept="image/*,.pdf"
-                        required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
+                    <x-input-file label="KTP Pemohon" name="dokumen[ktp_pemohon_path]" :value="old('dokumen.ktp_pemohon_path', $get_path('ktp_pemohon_path'))"
+                        accept="image/*,.pdf" required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
+
+                    <x-input-file label="Kartu Keluarga" name="dokumen[kartu_keluarga_path]" :value="old('dokumen.kartu_keluarga_path', $get_path('kartu_keluarga_path'))"
+                        accept="image/*,.pdf" required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                 </div>
 
                 {{-- KTP Pasangan (jika menikah) --}}
                 <div x-show="statusPerkawinan === 'Menikah'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
-                        <x-input-file label="KTP Pasangan" name="dokumen[ktp_pasangan_path]" accept="image/*,.pdf"
-                            required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
+                        <x-input-file label="KTP Pasangan" name="dokumen[ktp_pasangan_path]" :value="old('dokumen.ktp_pasangan_path', $get_path('ktp_pasangan_path'))"
+                            accept="image/*,.pdf" required="true"
+                            note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
 
-                        <x-input-file label="Surat Nikah" name="dokumen[surat_nikah_path]" accept="image/*,.pdf"
-                            required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
+                        <x-input-file label="Surat Nikah" name="dokumen[surat_nikah_path]" :value="old('dokumen.surat_nikah_path', $get_path('surat_nikah_path'))"
+                            accept="image/*,.pdf" required="true"
+                            note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                     </div>
                 </div>
 
                 {{-- Status Rumah --}}
                 <div x-show="statusRumah === 'Milik Sendiri'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
-                        <x-input-file label="PBB (Pajak Bumi & Bangunan)" name="dokumen[pbb_path]" accept="image/*,.pdf"
-                            required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
-                        <x-input-file label="Rek Listrik / Telp / Pam" name="dokumen[rek_listrik_path]"
+                        <x-input-file label="PBB (Pajak Bumi & Bangunan)" name="dokumen[pbb_path]" :value="old('dokumen.pbb_path', $get_path('pbb_path'))"
                             accept="image/*,.pdf" required="true"
                             note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
-
+                        <x-input-file label="Rek Listrik / Telp / Pam" name="dokumen[rek_listrik_path]"
+                            :value="old('dokumen.rek_listrik_path', $get_path('rek_listrik_path'))" accept="image/*,.pdf" required="true"
+                            note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                     </div>
                 </div>
 
                 <div x-show="statusRumah === 'Sewa'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
                         <x-input-file label="Surat Perjanjian Sewa Ruwah" name="dokumen[surat_sewa_path]"
-                            accept="image/*,.pdf" required="true"
+                            :value="old('dokumen.surat_sewa_path', $get_path('surat_sewa_path'))" accept="image/*,.pdf" required="true"
                             note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                     </div>
                 </div>
@@ -75,8 +85,8 @@
                 {{-- NPWP (jika pinjaman > 50 juta) --}}
                 <div x-show="jumlahPinjaman > 50000000">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <x-input-file label="NPWP" name="dokumen[npwp_path]" accept="image/*,.pdf" required="true"
-                            note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
+                        <x-input-file label="NPWP" name="dokumen[npwp_path]" :value="old('dokumen.npwp_path', $get_path('npwp_path'))" accept="image/*,.pdf"
+                            required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                     </div>
                 </div>
             </div>
@@ -86,17 +96,21 @@
                 <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Dokumen Pendukung Keuangan</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
                     <x-input-file label="Rekening Koran (3 Bulan Terakhir)" name="dokumen[rekening_koran_path]"
-                        accept="image/*,.pdf" required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
+                        :value="old('dokumen.rekening_koran_path', $get_path('rekening_koran_path'))" accept="image/*,.pdf" required="true"
+                        note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                 </div>
 
                 {{-- Jika Karyawan --}}
                 <div x-show="sumberPendapatan === 'Karyawan'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <x-input-file label="Surat Keterangan Bekerja" name="dokumen[surat_keterangan_bekerja_path]"
-                            accept="image/*,.pdf" required="true"
+                            :value="old(
+                                'dokumen.surat_keterangan_bekerja_path',
+                                $get_path('surat_keterangan_bekerja_path'),
+                            )" accept="image/*,.pdf" required="true"
                             note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                         <x-input-file label="Slip Gaji (3 Bulan Terakhir)" name="dokumen[slip_gaji_path]"
-                            accept="image/*,.pdf" required="true"
+                            :value="old('dokumen.slip_gaji_path', $get_path('slip_gaji_path'))" accept="image/*,.pdf" required="true"
                             note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                     </div>
                 </div>
@@ -104,11 +118,11 @@
                 {{-- Jika Wirausaha --}}
                 <div x-show="sumberPendapatan === 'Wirausaha'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <x-input-file label="Surat Keterangan Usaha (SKU)" name="dokumen[sku_path]"
+                        <x-input-file label="Surat Keterangan Usaha (SKU)" name="dokumen[sku_path]" :value="old('dokumen.sku_path', $get_path('sku_path'))"
                             accept="image/*,.pdf" required="true"
                             note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                         <x-input-file label="Nota/Bon/Laporan Keuangan Usaha" name="dokumen[nota_path]"
-                            accept="image/*,.pdf" required="true"
+                            :value="old('dokumen.nota_path', $get_path('nota_path'))" accept="image/*,.pdf" required="true"
                             note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                     </div>
                 </div>
@@ -131,29 +145,30 @@
                             <p class="text-red-500 text-sm">{{ $message }}</p>
                         @enderror
                     </div>
-                    <x-text-input name="nomor_sertifikat" label="Nomor Sertifikat" :value="old('nomor_sertifikat')" required />
-                    <x-text-input name="atas_nama" label="Atas Nama" :value="old('atas_nama')" required />
-                    <!-- Masa Berlaku (Hanya jika SHGB) -->
+                    <x-text-input name="nomor_sertifikat" label="Nomor Sertifikat" :value="old('nomor_sertifikat', $collateral->nomor_sertifikat ?? '')" required />
+                    <x-text-input name="atas_nama" label="Atas Nama" :value="old('atas_nama', $collateral->atas_nama ?? '')" required />
                     <div x-show="jenisAgunan === 'SHGB'" x-transition>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Masa Berlaku <span class="text-red-500">*</span>
                         </label>
 
+                        {{-- PERBAIKAN: Tambahkan parameter kedua pada value --}}
                         <input type="date" name="masa_berlaku" x-bind:disabled="jenisAgunan !== 'SHGB'"
                             x-bind:required="jenisAgunan === 'SHGB'"
                             class="w-full rounded-lg shadow-sm border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                            value="{{ old('masa_berlaku') }}">
-
+                            value="{{ old('masa_berlaku', $collateral->masa_berlaku ?? '') }}">
 
                         @error('masa_berlaku')
                             <p class="text-red-500 text-sm">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <x-input-file label="Foto Agunan" name="foto_agunan_path" accept="image/*,.pdf" required="true"
+                    <x-input-file label="Foto Agunan" name="foto_agunan_path" :value="old('foto_agunan_path', $collateral->foto_agunan ?? null)"
+                        accept="image/*,.pdf" required="true"
                         note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
-                    <x-input-file label="Sertifikat" name="sertifikat_path" accept="image/*,.pdf" required="true"
-                        note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
+
+                    <x-input-file label="Sertifikat" name="sertifikat_path" :value="old('sertifikat_path', $collateral->file_sertifikat ?? null)" accept="image/*,.pdf"
+                        required="true" note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                 </div>
             </div>
 

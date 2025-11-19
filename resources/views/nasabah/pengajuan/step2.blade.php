@@ -76,15 +76,15 @@
                 <div class="mt-3 pt-8">
                     <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Data Pasangan</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <x-text-input name="nama_pasangan" label="Nama Pasangan" :value="old('nama_pasangan', $application->detail->nama_pasangan ?? '')" required />
-                        <x-text-input name="no_ktp_pasangan" label="No KTP Pasangan" :value="old('no_ktp_pasangan', $application->detail->no_ktp_pasangan ?? '')" required />
+                        <x-text-input name="nama_pasangan" label="Nama Pasangan" :value="old('nama_pasangan', $applicationDetail->nama_pasangan ?? '')" required />
+                        <x-text-input name="no_ktp_pasangan" label="No KTP Pasangan" :value="old('no_ktp_pasangan', $applicationDetail->no_ktp_pasangan ?? '')" required />
                         <x-textarea-input name="alamat_tinggal_pasangan" label="Alamat Tinggal Pasangan" required
-                            :value="$application->detail->alamat_tinggal_pasangan" />
+                            :value="$applicationDetail->alamat_tinggal_pasangan" />
                         <x-textarea-input name="alamat_ktp_pasangan" label="Alamat Tinggal Pasangan KTP" required
-                            :value="$application->detail->alamat_ktp_pasangan" />
-                        <x-text-input name="no_hp_pasangan" label="Nomor HP Pasangan" :value="old('no_hp_pasangan', $application->detail->no_hp_pasangan ?? '')" required />
-                        <x-text-input name="email_pasangan" label="Email Pasangan" :value="old('email_pasangan', $application->detail->email_pasangan ?? '')" required />
-                        <x-text-input name="pekerjaan_pasangan" label="Pekerjaan Pasangan" :value="old('pekerjaan_pasangan', $application->detail->pekerjaan_pasangan ?? '')"
+                            :value="$applicationDetail->alamat_ktp_pasangan" />
+                        <x-text-input name="no_hp_pasangan" label="Nomor HP Pasangan" :value="old('no_hp_pasangan', $applicationDetail->no_hp_pasangan ?? '')" required />
+                        <x-text-input name="email_pasangan" label="Email Pasangan" :value="old('email_pasangan', $applicationDetail->email_pasangan ?? '')" required />
+                        <x-text-input name="pekerjaan_pasangan" label="Pekerjaan Pasangan" :value="old('pekerjaan_pasangan', $applicationDetail->pekerjaan_pasangan ?? '')"
                             required />
                     </div>
                 </div>
@@ -95,20 +95,20 @@
                 <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Data Penjamin</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <x-text-input name="nama_penjamin" label="Nama Penjamin"
-                        value="{{ old('nama_penjamin', $application->detail->nama_penjamin ?? '') }}" required />
+                        value="{{ old('nama_penjamin', $applicationDetail->nama_penjamin ?? '') }}" required />
                     <x-text-input name="no_ktp_penjamin" label="No KTP Penjamin"
-                        value="{{ old('no_ktp_penjamin', $application->detail->no_ktp_penjamin ?? '') }}" required />
+                        value="{{ old('no_ktp_penjamin', $applicationDetail->no_ktp_penjamin ?? '') }}" required />
                     <x-select-input name="hubungan_penjamin" label="Hubungan dengan Pemohon" :options="[
                         'Orang Tua' => 'Orang Tua',
                         'Saudara' => 'Saudara',
                         'Teman' => 'Teman',
                     ]"
-                        :value="$application->detail->hubungan_penjamin" required />
+                        :value="$applicationDetail->hubungan_penjamin" required />
                     <x-text-input name="no_hp_penjamin" label="Nomor HP Penjamin"
-                        value="{{ old('no_hp_penjamin', $application->detail->no_hp_penjamin ?? '') }}" required />
+                        value="{{ old('no_hp_penjamin', $applicationDetail->no_hp_penjamin ?? '') }}" required />
                     <x-text-input name="email_penjamin" label="Email Penjamin" type="email"
-                        value="{{ old('email_penjamin', $application->detail->email_penjamin ?? '') }}" required />
-                    <x-textarea-input name="alamat_penjamin" label="Alamat Penjamin" required :value="$application->detail->alamat_penjamin" />
+                        value="{{ old('email_penjamin', $applicationDetail->email_penjamin ?? '') }}" required />
+                    <x-textarea-input name="alamat_penjamin" label="Alamat Penjamin" required :value="$applicationDetail->alamat_penjamin" />
                 </div>
             </div>
 

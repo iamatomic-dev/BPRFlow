@@ -6,6 +6,12 @@
     {{-- Konten utama --}}
     <section id="home" class="mb-8">
         @if (session('success'))
+            <x-alert type="success">
+                <strong>Information:</strong> {{ session('success') }}
+            </x-alert>
+        @endif
+
+        @if (session('warning'))
             <x-alert type="warning">
                 <strong>Information:</strong> {{ session('warning') }}
             </x-alert>

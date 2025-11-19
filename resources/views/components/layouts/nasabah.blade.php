@@ -31,12 +31,12 @@
                 class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('pengajuan.*') ? 'bg-[#1b263b]' : '' }}">
                 Pengajuan Kredit
             </a>
-            <a href="{{ route('pengajuan.status-kredit') }}"
-                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('nasabah.status') ? 'bg-[#1b263b]' : '' }}">
+            <a href="{{ route('riwayat.index') }}"
+                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('riwayat.*') ? 'bg-[#1b263b]' : '' }}">
                 Status Pengajuan
             </a>
-            <a href="#"
-                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('nasabah.simulasi') ? 'bg-[#1b263b]' : '' }}">
+            <a href="{{ route('simulasi.index') }}"
+                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('simulasi.index') ? 'bg-[#1b263b]' : '' }}">
                 Simulasi Kredit
             </a>
         </nav>

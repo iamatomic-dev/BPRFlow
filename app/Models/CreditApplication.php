@@ -17,9 +17,15 @@ class CreditApplication extends Model
         'jangka_waktu',
         'sumber_pendapatan',
         'status',
+        'submitted_at',
         'requires_npwp',
         'approved_by',
         'approved_at'
+    ];
+
+    protected $casts = [
+        'submitted_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     public function user()

@@ -4,11 +4,12 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Nasabah\PengajuanKreditController;
-use App\Http\Controllers\Nasabah\StatusKreditController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Nasabah\RiwayatKreditController;
+use App\Http\Controllers\Nasabah\SimulasiKreditController;
 use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\ManagerController;
 use App\Http\Controllers\Dashboard\DirekturController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,13 +42,25 @@ Route::middleware(['auth', 'role:Nasabah'])
         Route::post('/upload-temp', [PengajuanKreditController::class, 'uploadTemp'])->name('upload.temp');
         Route::get('/back-step-2', [PengajuanKreditController::class, 'backToStep2'])->name('back.step2');
 
-        Route::get('/review', [PengajuanKreditController::class, 'review'])->name('review');
+        Route::get('/review', [PengajuanKreditController::class, 'createReview'])->name('review');
+        Route::post('/review', [PengajuanKreditController::class, 'postReview'])->name('review.post');
         Route::get('/back-step-3', [PengajuanKreditController::class, 'backToStep3'])->name('back.step3');
+    });
 
-        Route::post('/submit', [PengajuanKreditController::class, 'submit'])->name('submit');
+Route::middleware(['auth', 'role:Nasabah'])
+    ->prefix('riwayat')
+    ->name('riwayat.')
+    ->group(function () {
+        Route::get('/riwayat-kredit', [RiwayatKreditController::class, 'index'])->name('index');
+        Route::get('/riwayat-kredit/{id}', [RiwayatKreditController::class, 'show'])->name('show');
+    });
 
-
-        Route::get('/status-kredit', [StatusKreditController::class, 'index'])->name('status-kredit');
+Route::middleware(['auth', 'role:Nasabah'])
+    ->prefix('simulasi')
+    ->name('simulasi.')
+    ->group(function () {
+        Route::get('/simulasi-kredit', [SimulasiKreditController::class, 'index'])->name('index');
+        Route::post('/simulasi-kredit/hitung', [SimulasiKreditController::class, 'calculate'])->name('calculate');
     });
 
 // ====================== ADMIN ======================
