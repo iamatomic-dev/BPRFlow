@@ -12,7 +12,7 @@ class RiwayatKreditController extends Controller
     /**
      * Menampilkan daftar riwayat pengajuan kredit
      */
-    public function index()
+    public function index(Request $request)
     {
         $userId = Auth::id();
 

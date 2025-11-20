@@ -1,7 +1,7 @@
 <x-layouts.nasabah :title="'Review Pengajuan Kredit'">
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold">Review Pengajuan Kredit</h1>
+            <h1 class="font-bold">Review Pengajuan Kredit</h1>
             <span class="text-sm text-gray-500 ms-4 pt-1">Konfirmasi Akhir</span>
         </div>
     </x-slot>

@@ -45,8 +45,8 @@ class PengajuanKreditController extends Controller
             ->exists();
 
         if ($activeApplication) {
-            return redirect()->route('nasabah.dashboard')
-                ->with('warning', 'Anda masih memiliki pengajuan yang sedang diproses atau pinjaman aktif.');
+            return redirect()->route('riwayat.index')
+                ->with('error', 'Anda masih memiliki pengajuan yang sedang diproses atau pinjaman aktif.');
         }
 
         // 2. CEK APAKAH ADA DRAFT (Mode Lanjutkan/Edit Paksa)

@@ -1,6 +1,6 @@
 <x-layouts.nasabah>
     <x-slot name="header">
-        <h1 class="text-2xl font-bold">Selamat Datang, {{ Auth::user()->name }}!</h1>
+        <h1 class="font-bold">Welcome, {{ Auth::user()->name }}!</h1>
     </x-slot>
 
     {{-- Konten utama --}}
@@ -13,7 +13,7 @@
 
         @if (session('warning'))
             <x-alert type="warning">
-                <strong>Information:</strong> {{ session('warning') }}
+                <strong>Warning:</strong> {{ session('warning') }}
             </x-alert>
         @endif
 

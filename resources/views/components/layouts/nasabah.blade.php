@@ -7,90 +7,168 @@
     <title>{{ $title ?? 'Dashboard Nasabah' }} | BPR Parinama Simfoni Indonesia</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {{-- Font Awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800 font-sans antialiased">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-[#0d1b2a] text-white fixed top-0 left-0 h-screen">
-        <div class="p-6 text-center border-b border-gray-700 flex items-center justify-center gap-2">
-            <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
+    <div id="sidebarOverlay"
+        class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden transition-opacity opacity-0 md:hidden">
+    </div>
+
+    <aside id="sidebar"
+        class="fixed top-0 left-0 z-50 h-screen w-64 bg-[#0d1b2a] text-white transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0">
+
+        <div class="h-16 flex items-center justify-center border-b border-gray-700 px-6 gap-3 bg-[#0d1b2a]">
+            <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo" class="w-8 h-8 object-contain">
             <div class="text-left">
-                <h2 class="text-lg font-bold leading-tight">BPR Parinama</h2>
-                <p class="text-xs">Simfoni Indonesia</p>
+                <h2 class="text-base font-bold leading-tight">BPR Parinama</h2>
+                <p class="text-[10px] text-gray-400 tracking-wider">SIMFONI INDONESIA</p>
             </div>
+            <button id="closeSidebar" class="md:hidden ml-auto text-gray-400 hover:text-white">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
         </div>
 
-        <nav class="mt-6">
+        <nav class="mt-6 px-2 space-y-1">
             <a href="{{ route('nasabah.dashboard') }}"
-                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('nasabah.dashboard') ? 'bg-[#1b263b]' : '' }}">
-                Beranda
+                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('nasabah.dashboard') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
+                <i class="fa-solid fa-house w-6 text-center mr-2 text-sm"></i>
+                <span class="font-medium">Beranda</span>
             </a>
             <a href="{{ route('pengajuan.step1') }}"
-                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('pengajuan.*') ? 'bg-[#1b263b]' : '' }}">
-                Pengajuan Kredit
+                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('pengajuan.*') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
+                <i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-2 text-sm"></i>
+                <span class="font-medium">Pengajuan Kredit</span>
             </a>
             <a href="{{ route('riwayat.index') }}"
-                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('riwayat.*') ? 'bg-[#1b263b]' : '' }}">
-                Status Pengajuan
+                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('riwayat.*') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
+                <i class="fa-solid fa-clock-rotate-left w-6 text-center mr-2 text-sm"></i>
+                <span class="font-medium">Status Pengajuan</span>
             </a>
             <a href="{{ route('simulasi.index') }}"
-                class="block px-6 py-3 hover:bg-[#1b263b] transition {{ request()->routeIs('simulasi.index') ? 'bg-[#1b263b]' : '' }}">
-                Simulasi Kredit
+                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('simulasi.index') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
+                <i class="fa-solid fa-calculator w-6 text-center mr-2 text-sm"></i>
+                <span class="font-medium">Simulasi Kredit</span>
             </a>
         </nav>
     </aside>
 
-    <!-- Header -->
-    <header
-        class="sticky top-0 left-64 w-[calc(100%-16rem)] bg-white shadow-md px-6 py-4 flex justify-between items-center">
-        <div>
-            {{ $header ?? '' }}
-        </div>
+    <div class="flex flex-col min-h-screen md:ml-64 transition-all duration-300">
 
-        <div class="relative">
-            <button id="dropdownButton"
-                class="flex items-center gap-2 px-4 py-2 bg-gray-50 border rounded-lg shadow hover:bg-gray-100 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>{{ Auth::user()->name }}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
+        <header class="sticky top-0 z-30 bg-white shadow-sm h-16 flex items-center justify-between px-4 sm:px-6">
 
-            <div id="dropdownMenu"
-                class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg overflow-hidden z-50">
-                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Edit
-                    Profil</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit"
-                        class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</button>
-                </form>
+            <div class="flex items-center gap-4">
+                <button id="hamburgerBtn"
+                    class="p-2 -ml-2 text-gray-600 rounded-md md:hidden hover:bg-gray-100 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <div class="text-base md:text-lg font-semibold text-gray-800 truncate max-w-[180px] sm:max-w-none">
+                    {{ $header ?? '' }}
+                </div>
             </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="ml-64 p-6">
-        {{ $slot }}
-    </main>
+            <div class="relative">
+                <button id="dropdownButton"
+                    class="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-full hover:bg-gray-100 transition focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500">
+
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
+                        {{ substr(Auth::user()->name, 0, 1) }}
+                    </div>
+
+                    <span class="hidden sm:block text-sm font-medium text-gray-700 truncate max-w-[100px]">
+                        {{ Auth::user()->name }}
+                    </span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <div id="dropdownMenu"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-50 transform origin-top-right transition-all">
+                    <div class="px-4 py-2 border-b border-gray-100 sm:hidden">
+                        <p class="text-xs text-gray-500">Login sebagai</p>
+                        <p class="text-sm font-bold text-gray-800 truncate">{{ Auth::user()->name }}</p>
+                    </div>
+                    <a href="{{ route('nasabah.profile-edit') }}"
+                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+                        <i class="fa-solid fa-user mr-2 w-4"></i> Edit Profil
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <i class="fa-solid fa-arrow-right-from-bracket mr-2 w-4"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-4 sm:p-6 lg:p-8">
+            {{ $slot }}
+        </main>
+
+        <footer class="p-6 text-center text-xs text-gray-400">
+            &copy; {{ date('Y') }} BPR Parinama Simfoni Indonesia. All rights reserved.
+        </footer>
+    </div>
 
     <script>
-        // Dropdown profile
-        const btn = document.getElementById('dropdownButton');
-        const menu = document.getElementById('dropdownMenu');
-        btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
-        window.addEventListener('click', (e) => {
-            if (!btn.contains(e.target) && !menu.contains(e.target)) {
-                menu.classList.add('hidden');
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- LOGIKA DROPDOWN PROFIL ---
+            const dropdownBtn = document.getElementById('dropdownButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            dropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('hidden');
+            });
+
+            // --- LOGIKA SIDEBAR MOBILE ---
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const closeSidebarBtn = document.getElementById('closeSidebar');
+
+            function openSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+                setTimeout(() => sidebarOverlay.classList.remove('opacity-0'), 10); // Fade in effect
             }
+
+            function closeSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('opacity-0');
+                setTimeout(() => sidebarOverlay.classList.add('hidden'), 300); // Wait for transition
+            }
+
+            hamburgerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openSidebar();
+            });
+
+            sidebarOverlay.addEventListener('click', closeSidebar);
+            closeSidebarBtn.addEventListener('click', closeSidebar);
+
+            // --- GLOBAL CLICK LISTENER (Untuk menutup dropdown/sidebar jika klik di luar) ---
+            window.addEventListener('click', (e) => {
+                // Tutup dropdown jika klik di luar
+                if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
         });
     </script>
     @stack('scripts')

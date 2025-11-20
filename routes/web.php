@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Nasabah\NasabahProfileController;
 use App\Http\Controllers\Nasabah\PengajuanKreditController;
 use App\Http\Controllers\Nasabah\RiwayatKreditController;
 use App\Http\Controllers\Nasabah\SimulasiKreditController;
@@ -51,16 +52,25 @@ Route::middleware(['auth', 'role:Nasabah'])
     ->prefix('riwayat')
     ->name('riwayat.')
     ->group(function () {
-        Route::get('/riwayat-kredit', [RiwayatKreditController::class, 'index'])->name('index');
-        Route::get('/riwayat-kredit/{id}', [RiwayatKreditController::class, 'show'])->name('show');
+        Route::get('/kredit', [RiwayatKreditController::class, 'index'])->name('index');
+        Route::get('/kredit/{id}', [RiwayatKreditController::class, 'show'])->name('show');
     });
 
 Route::middleware(['auth', 'role:Nasabah'])
     ->prefix('simulasi')
     ->name('simulasi.')
     ->group(function () {
-        Route::get('/simulasi-kredit', [SimulasiKreditController::class, 'index'])->name('index');
-        Route::post('/simulasi-kredit/hitung', [SimulasiKreditController::class, 'calculate'])->name('calculate');
+        Route::get('/kredit', [SimulasiKreditController::class, 'index'])->name('index');
+        Route::post('/kredit/hitung', [SimulasiKreditController::class, 'calculate'])->name('calculate');
+    });
+
+Route::middleware(['auth', 'role:Nasabah'])
+    ->prefix('nasabah')
+    ->name('nasabah.')
+    ->group(function () {
+        Route::get('/profile', [NasabahProfileController::class, 'edit'])->name('profile-edit');
+        Route::patch('/profile', [NasabahProfileController::class, 'update'])->name('profile-update');
+        Route::put('/password', [NasabahProfileController::class, 'updatePassword'])->name('password-update');
     });
 
 // ====================== ADMIN ======================

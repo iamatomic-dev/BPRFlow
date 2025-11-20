@@ -1,7 +1,29 @@
 <x-layouts.nasabah :title="'Riwayat Pengajuan Kredit'">
     <x-slot name="header">
-        <h1 class="text-2xl font-bold">Status & Riwayat Kredit</h1>
+        <h1 class="font-bold">Status & Riwayat Kredit</h1>
     </x-slot>
+
+    @if (session('success'))
+        <x-alert type="success">
+            <strong>Berhasil!</strong> {{ session('success') }}
+        </x-alert>
+    @endif
+
+    @if (session('error'))
+        <x-alert type="error">
+            <strong>Gagal!</strong> {{ session('error') }}
+        </x-alert>
+    @endif
+
+    @if ($errors->any())
+        <x-alert type="error">
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </x-alert>
+    @endif
 
     <div class="bg-white rounded-2xl shadow-md overflow-hidden">
         @if ($applications->isEmpty())
@@ -29,7 +51,7 @@
                             <th class="px-6 py-4">Tanggal</th>
                             <th class="px-6 py-4">Fasilitas</th>
                             <th class="px-6 py-4">Jumlah Pinjaman</th>
-                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-center">Status</th>
                             <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
@@ -64,9 +86,9 @@
                                         ];
                                         $class = $statusClasses[$app->status] ?? 'bg-gray-100 text-gray-600';
                                     @endphp
-                                    <span class="px-3 py-1 rounded-full text-xs font-bold {{ $class }}">
+                                    <div class="text-center py-2 rounded-full text-xs font-bold {{ $class }}">
                                         {{ str_replace('_', ' ', ucfirst($app->status)) }}
-                                    </span>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     @if (in_array($app->status, ['draft_step1', 'draft_step2', 'draft_step3']))
@@ -75,7 +97,6 @@
                                             Lanjutkan Draft →
                                         </a>
                                     @else
-                                        {{-- KOREKSI: Route name sesuai grup 'riwayat.' + 'show' --}}
                                         <a href="{{ route('riwayat.show', $app->id) }}"
                                             class="text-blue-600 hover:text-blue-800 font-medium hover:underline">
                                             Lihat Detail
