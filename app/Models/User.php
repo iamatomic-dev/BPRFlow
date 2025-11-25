@@ -41,11 +41,18 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
         'password' => 'hashed',
     ];
 
     public function creditApplications()
     {
         return $this->hasMany(CreditApplication::class);
+    }
+
+    public function nasabahProfile()
+    {
+        // Relasi: Satu User punya Satu Profil
+        return $this->hasOne(NasabahProfile::class, 'user_id');
     }
 }

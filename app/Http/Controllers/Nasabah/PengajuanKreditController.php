@@ -137,24 +137,41 @@ class PengajuanKreditController extends Controller
 
     public function createStep2()
     {
-        $this->ensureApplicationSession(); // Recover session jika hilang
+        $this->ensureApplicationSession();
         $applicationId = session('application_id');
 
-        if (!$applicationId) {
-            return redirect()->route('pengajuan.step1');
-        }
+        if (!$applicationId) return redirect()->route('pengajuan.step1');
 
         $application = CreditApplication::with('nasabahProfile')->find($applicationId);
 
-        // Validasi urutan step
         if (!$application) {
             return redirect()->route('pengajuan.step1');
         }
 
-        // Ambil data detail existing
-        $applicationDetail = CreditApplicationDetail::firstOrNew([
-            'credit_application_id' => $applicationId
-        ]);
+        // 1. Coba ambil detail dari draft saat ini
+        $applicationDetail = CreditApplicationDetail::where('credit_application_id', $applicationId)->first();
+
+        // 2. Jika draft detail kosong (nasabah baru masuk step 2),
+        // Coba cari data dari pengajuan TERAKHIR milik user ini (Pre-fill data)
+        if (!$applicationDetail) {
+            $lastApp = CreditApplication::with('detail')
+                ->where('user_id', Auth::id())
+                ->where('id', '!=', $applicationId) // Jangan ambil diri sendiri
+                ->whereNotNull('submitted_at') // Ambil yang sudah pernah disubmit
+                ->latest()
+                ->first();
+
+            if ($lastApp && $lastApp->detail) {
+                // Kita gunakan data lama hanya untuk tampilan (pre-fill)
+                // Tidak disimpan ke database dulu sampai user klik Simpan
+                $applicationDetail = $lastApp->detail;
+            }
+        }
+
+        // Jika masih kosong juga (nasabah baru pertama kali), buat objek kosong agar view tidak error
+        if (!$applicationDetail) {
+            $applicationDetail = new CreditApplicationDetail();
+        }
 
         $facilities = CreditFacility::where('aktif', 1)->get();
 
@@ -266,7 +283,7 @@ class PengajuanKreditController extends Controller
 
     public function createStep3()
     {
-        $this->ensureApplicationSession(); // Recover session
+        $this->ensureApplicationSession();
         $applicationId = session('application_id');
 
         if (!$applicationId) return redirect()->route('pengajuan.step1');
@@ -276,24 +293,52 @@ class PengajuanKreditController extends Controller
         // Validasi Flow
         if (!$application) return redirect()->route('pengajuan.step1');
 
-        // Cek apakah detail sudah diisi (mencegah loncat dari step 1 ke 3)
+        // Cek detail step 2
         $applicationDetail = CreditApplicationDetail::where('credit_application_id', $applicationId)->first();
         if (!$applicationDetail) {
-            return redirect()->route('pengajuan.step2')
-                ->with('warning', 'Silakan lengkapi data pengajuan kredit terlebih dahulu.');
+            return redirect()->route('pengajuan.step2');
         }
 
-        // Ambil data agunan existing (Non-Destruktif)
-        $collateral = CreditCollateral::firstOrNew([
-            'credit_application_id' => $applicationId
-        ]);
+        // --- LOGIKA AUTO-FILL AGUNAN ---
+        $collateral = CreditCollateral::where('credit_application_id', $applicationId)->first();
 
-        // Ambil dokumen existing (Non-Destruktif)
-        $dokumenMap = CreditDocument::where('credit_application_id', $applicationId)
-            ->get()
-            ->keyBy('jenis_dokumen');
+        // Jika kosong, cari dari pengajuan terakhir
+        $lastApp = null; // Simpan referensi app terakhir
 
-        return view('nasabah.pengajuan.step3', compact('application', 'collateral', 'dokumenMap'));
+        if (!$collateral) {
+            $lastApp = CreditApplication::with(['collateral', 'documents'])
+                ->where('user_id', Auth::id())
+                ->where('id', '!=', $applicationId)
+                ->whereNotNull('submitted_at')
+                ->latest()
+                ->first();
+
+            if ($lastApp && $lastApp->collateral) {
+                // Gunakan data agunan lama untuk tampilan (belum save ke DB)
+                $collateral = $lastApp->collateral;
+            } else {
+                // Objek kosong agar view tidak error
+                $collateral = new CreditCollateral();
+            }
+        }
+
+        // --- LOGIKA AUTO-FILL DOKUMEN ---
+        // 1. Ambil dokumen yang SUDAH diupload di draft ini
+        $currentDocs = CreditDocument::where('credit_application_id', $applicationId)->get();
+        $dokumenMap = $currentDocs->keyBy('jenis_dokumen');
+
+        // 2. Jika draft ini masih minim dokumen, coba intip dokumen lama
+        // Kita hanya ambil dokumen lama JIKA di draft sekarang belum ada
+        if ($lastApp && $lastApp->documents) {
+            foreach ($lastApp->documents as $oldDoc) {
+                // Jika jenis dokumen ini BELUM ada di draft sekarang, masukkan ke map
+                if (!isset($dokumenMap[$oldDoc->jenis_dokumen])) {
+                    $dokumenMap[$oldDoc->jenis_dokumen] = $oldDoc;
+                }
+            }
+        }
+
+        return view('nasabah.pengajuan.step3', compact('application', 'collateral', 'dokumenMap', 'lastApp'));
     }
 
     public function postStep3(Request $request)
@@ -348,16 +393,17 @@ class PengajuanKreditController extends Controller
 
         $validated = $request->validate($rules);
 
-        // --- LOGIKA SIMPAN FILE (NON-DESTRUKTIF) ---
-        // Saya masukkan function helper di dalam sini agar tetap rapi sesuai style Anda
-        $saveFile = function ($path, $folder) {
+        $processFile = function ($path, $targetFolder) use ($application) {
             if (!$path) return null;
 
-            // Jika file baru (dari temp)
+            $currentAppFolder = "dokumen/{$application->id}";
+            $currentAgunanFolder = "agunan/{$application->id}";
+
+            // KASUS 1: File Baru (dari Temp)
             if (str_starts_with($path, 'temp/')) {
                 $basename = basename($path);
-                $newPath = $folder . '/' . $basename;
-                Storage::disk('public')->makeDirectory($folder);
+                $newPath = $targetFolder . '/' . $basename;
+                Storage::disk('public')->makeDirectory($targetFolder);
 
                 if (Storage::disk('local')->exists($path)) {
                     Storage::disk('public')->put($newPath, Storage::disk('local')->get($path));
@@ -365,13 +411,37 @@ class PengajuanKreditController extends Controller
                     return $newPath;
                 }
             }
-            // Jika file lama, return path as is
-            return $path;
+
+            // KASUS 2: File Lama (Sudah ada di public storage)
+            if (Storage::disk('public')->exists($path)) {
+                // Cek apakah file ini milik aplikasi ini?
+                // Jika path mengandung ID aplikasi saat ini, berarti sudah aman
+                if (str_contains($path, "/{$application->id}/")) {
+                    return $path; // Tidak perlu diapa-apakan
+                }
+
+                // KASUS 3: File Milik Pengajuan LAMA (Reuse)
+                // Kita harus COPY file ini ke folder aplikasi baru
+                // Agar jika pengajuan lama dihapus, pengajuan ini tidak rusak.
+                $basename = basename($path);
+                $newPath = $targetFolder . '/' . $basename;
+
+                // Hindari copy file ke dirinya sendiri
+                if ($path !== $newPath) {
+                    Storage::disk('public')->makeDirectory($targetFolder);
+                    Storage::disk('public')->copy($path, $newPath);
+                    return $newPath;
+                }
+            }
+
+            return $path; // Fallback
         };
 
         // Simpan Dokumen
-        foreach ($validated['dokumen'] ?? [] as $key => $tempPath) {
-            $newPath = $saveFile($tempPath, "dokumen/{$application->id}");
+        foreach ($validated['dokumen'] ?? [] as $key => $path) {
+            // Tentukan folder target
+            $newPath = $processFile($path, "dokumen/{$application->id}");
+
             if ($newPath) {
                 CreditDocument::updateOrCreate(
                     ['credit_application_id' => $application->id, 'jenis_dokumen' => $key],
@@ -381,8 +451,8 @@ class PengajuanKreditController extends Controller
         }
 
         // Simpan Agunan
-        $fotoAgunan = $saveFile($validated['foto_agunan_path'], "agunan/{$application->id}");
-        $sertifikat = $saveFile($validated['sertifikat_path'], "agunan/{$application->id}");
+        $fotoAgunan = $processFile($validated['foto_agunan_path'], "agunan/{$application->id}");
+        $sertifikat = $processFile($validated['sertifikat_path'], "agunan/{$application->id}");
 
         CreditCollateral::updateOrCreate(
             ['credit_application_id' => $application->id],
@@ -396,11 +466,10 @@ class PengajuanKreditController extends Controller
             ]
         );
 
-        // Update Status ke draft_step3
         $application->update(['status' => 'draft_step3']);
 
         return redirect()->route('pengajuan.review')
-            ->with('success', 'Dokumen tersimpan. Silakan review data Anda.');
+            ->with('success', 'Dokumen berhasil disimpan.');
     }
 
     public function uploadTemp(Request $request)
@@ -445,6 +514,27 @@ class PengajuanKreditController extends Controller
         return view('nasabah.pengajuan.review', compact('application', 'dokumenMap'));
     }
 
+    private function generateNoPengajuan()
+    {
+        $prefix = 'PK-' . date('Ymd') . '-'; // Contoh: PK-20251121-
+
+        // Cari pengajuan terakhir HARI INI yang sudah ada nomornya
+        $lastApp = CreditApplication::where('no_pengajuan', 'like', $prefix . '%')
+            ->orderBy('no_pengajuan', 'desc')
+            ->first();
+
+        if (!$lastApp) {
+            $sequence = 1;
+        } else {
+            // Ambil 4 digit terakhir, ubah jadi integer, tambah 1
+            $lastNumber = (int) substr($lastApp->no_pengajuan, -4);
+            $sequence = $lastNumber + 1;
+        }
+
+        // Format jadi 4 digit (0001, 0002, dst)
+        return $prefix . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+    }
+
     public function postReview(Request $request)
     {
         $applicationId = session('application_id');
@@ -456,8 +546,17 @@ class PengajuanKreditController extends Controller
                 ->with('error', 'Gagal mengirim pengajuan. Status tidak valid.');
         }
 
+        // --- GENERATE NOMOR UNIK DI SINI ---
+        // Cek dulu biar gak double generate kalau user refresh page
+        if (empty($application->no_pengajuan)) {
+            $noPengajuan = $this->generateNoPengajuan();
+        } else {
+            $noPengajuan = $application->no_pengajuan;
+        }
+
         // SUBMIT FINAL
         $application->update([
+            'no_pengajuan'  => $noPengajuan, // Simpan nomor
             'status'        => 'Menunggu Verifikasi',
             'submitted_at'  => now(),
         ]);

@@ -13,6 +13,7 @@ class DashboardController extends Controller
         return view('nasabah.index', [
             'user' => $user,
             'role' => 'Nasabah',
+            'title' => 'Testing'
         ]);
     }
 }

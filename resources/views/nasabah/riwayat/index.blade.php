@@ -48,7 +48,7 @@
                 <table class="w-full text-sm text-left text-gray-600">
                     <thead class="bg-gray-50 text-gray-700 uppercase font-semibold">
                         <tr>
-                            <th class="px-6 py-4">Tanggal</th>
+                            <th class="px-6 py-4">No. Pengajuan</th>
                             <th class="px-6 py-4">Fasilitas</th>
                             <th class="px-6 py-4">Jumlah Pinjaman</th>
                             <th class="px-6 py-4 text-center">Status</th>
@@ -59,12 +59,12 @@
                         @foreach ($applications as $app)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4">
-                                    {{-- Cek submitted_at dulu, kalau null pakai created_at --}}
-                                    {{ $app->submitted_at ? $app->submitted_at->format('d M Y') : $app->created_at->format('d M Y') }}
-                                    <div class="text-xs text-gray-400">
-                                        {{ $app->submitted_at ? $app->submitted_at->format('H:i') : $app->created_at->format('H:i') }}
-                                        WIB
-                                    </div>
+                                    @if ($app->status == 'Disetujui')
+                                        <div class="text-xs font-bold text-green-600 mb-1">PK:
+                                            {{ $app->no_perjanjian_kredit }}</div>
+                                    @endif
+                                    <div class="text-xs text-gray-500">{{ $app->no_pengajuan }}</div>
+                                    <div class="text-xs text-gray-400">{{ $app->created_at->format('d M Y') }}</div>
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900">
                                     {{-- KOREKSI: Pakai ->nama --}}

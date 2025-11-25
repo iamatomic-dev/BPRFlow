@@ -13,7 +13,13 @@
 
         @if (session('warning'))
             <x-alert type="warning">
-                <strong>Warning:</strong> {{ session('warning') }}
+                <strong>Peringatan:</strong> {{ session('warning') }}
+            </x-alert>
+        @endif
+
+        @if (session('error'))
+            <x-alert type="error">
+                <strong>Error:</strong> {{ session('error') }}
             </x-alert>
         @endif
 

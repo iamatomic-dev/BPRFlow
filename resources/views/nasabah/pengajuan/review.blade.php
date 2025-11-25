@@ -6,6 +6,24 @@
         </div>
     </x-slot>
 
+    @if (session('success'))
+        <x-alert type="success">
+            <strong>Information:</strong> {{ session('success') }}
+        </x-alert>
+    @endif
+
+    @if (session('warning'))
+        <x-alert type="warning">
+            <strong>Peringatan:</strong> {{ session('warning') }}
+        </x-alert>
+    @endif
+
+    @if (session('error'))
+        <x-alert type="error">
+            <strong>Error:</strong> {{ session('error') }}
+        </x-alert>
+    @endif
+
     @php
         // Helper kecil untuk menampilkan data
         function reviewItem($label, $value, $default = 'Belum diisi')

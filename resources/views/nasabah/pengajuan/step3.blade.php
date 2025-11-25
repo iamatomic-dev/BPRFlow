@@ -6,6 +6,18 @@
         </div>
     </x-slot>
 
+    @if (session('success'))
+        <x-alert type="success">
+            <strong>Information:</strong> {{ session('success') }}
+        </x-alert>
+    @endif
+
+    @if (session('warning'))
+        <x-alert type="warning">
+            <strong>Peringatan:</strong> {{ session('warning') }}
+        </x-alert>
+    @endif
+
     <section id="dokumen-agunan" class="bg-white rounded-2xl shadow-md p-8 mx-auto" x-data="{
         statusPerkawinan: '{{ $application->nasabahProfile->status_perkawinan ?? '' }}',
         statusRumah: '{{ $application->nasabahProfile->status_rumah ?? '' }}',
@@ -22,6 +34,19 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+            </div>
+        @endif
+
+        {{-- Notifikasi Auto-Fill --}}
+        {{-- cek variabel $lastApp yang dikirim dari controller --}}
+        @if (isset($lastApp) && $collateral->exists && $collateral->credit_application_id != $application->id)
+            <div class="mb-6 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100 flex items-start gap-3">
+                <i class="fa-solid fa-file-import mt-1"></i>
+                <div>
+                    <strong>Data Otomatis Terisi:</strong> Data agunan dan beberapa dokumen telah diambil dari pengajuan
+                    Anda sebelumnya (Tgl: {{ $lastApp->created_at->format('d M Y') }}).<br>
+                    Anda tetap dapat mengunggah dokumen baru jika diperlukan.
+                </div>
             </div>
         @endif
 

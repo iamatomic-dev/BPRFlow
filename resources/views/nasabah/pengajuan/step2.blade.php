@@ -6,6 +6,18 @@
         </div>
     </x-slot>
 
+    @if (session('success'))
+        <x-alert type="success">
+            <strong>Information:</strong> {{ session('success') }}
+        </x-alert>
+    @endif
+
+    @if (session('warning'))
+        <x-alert type="warning">
+            <strong>Peringatan:</strong> {{ session('warning') }}
+        </x-alert>
+    @endif
+
     <section id="pengajuan" class="bg-white rounded-2xl shadow-md p-8 mx-auto" x-data="{
         menikah: '{{ $application->nasabahProfile->status_perkawinan ?? '' }}' === 'Menikah',
         maxJangkaWaktu: null,
@@ -63,8 +75,6 @@
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-
-
                 <x-select-input name="sumber_pendapatan" label="Sumber Pendapatan" :options="['Karyawan' => 'Karyawan', 'Wirausaha' => 'Wirausaha']" :value="$application->sumber_pendapatan"
                     required />
                 <x-textarea-input name="tujuan_pinjaman" label="Tujuan Penggunaan Pinjaman" required
@@ -75,16 +85,25 @@
             <template x-if="menikah">
                 <div class="mt-3 pt-8">
                     <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Data Pasangan</h3>
+
+                    {{-- Notifikasi kecil bahwa data diambil dari sebelumnya --}}
+                    @if ($applicationDetail->exists && $applicationDetail->credit_application_id != $application->id)
+                        <div class="mb-4 text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-100">
+                            <i class="fa-solid fa-info-circle mr-1"></i> Data pasangan diisi otomatis dari pengajuan
+                            sebelumnya. Silakan ubah jika ada perubahan.
+                        </div>
+                    @endif
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <x-text-input name="nama_pasangan" label="Nama Pasangan" :value="old('nama_pasangan', $applicationDetail->nama_pasangan ?? '')" required />
-                        <x-text-input name="no_ktp_pasangan" label="No KTP Pasangan" :value="old('no_ktp_pasangan', $applicationDetail->no_ktp_pasangan ?? '')" required />
+                        <x-text-input name="nama_pasangan" label="Nama Pasangan" :value="old('nama_pasangan', $applicationDetail->nama_pasangan)" required />
+                        <x-text-input name="no_ktp_pasangan" label="No KTP Pasangan" :value="old('no_ktp_pasangan', $applicationDetail->no_ktp_pasangan)" required />
                         <x-textarea-input name="alamat_tinggal_pasangan" label="Alamat Tinggal Pasangan" required
-                            :value="$applicationDetail->alamat_tinggal_pasangan" />
-                        <x-textarea-input name="alamat_ktp_pasangan" label="Alamat Tinggal Pasangan KTP" required
-                            :value="$applicationDetail->alamat_ktp_pasangan" />
-                        <x-text-input name="no_hp_pasangan" label="Nomor HP Pasangan" :value="old('no_hp_pasangan', $applicationDetail->no_hp_pasangan ?? '')" required />
-                        <x-text-input name="email_pasangan" label="Email Pasangan" :value="old('email_pasangan', $applicationDetail->email_pasangan ?? '')" required />
-                        <x-text-input name="pekerjaan_pasangan" label="Pekerjaan Pasangan" :value="old('pekerjaan_pasangan', $applicationDetail->pekerjaan_pasangan ?? '')"
+                            :value="old('alamat_tinggal_pasangan', $applicationDetail->alamat_tinggal_pasangan)" />
+                        <x-textarea-input name="alamat_ktp_pasangan" label="Alamat KTP Pasangan" required
+                            :value="old('alamat_ktp_pasangan', $applicationDetail->alamat_ktp_pasangan)" />
+                        <x-text-input name="no_hp_pasangan" label="Nomor HP Pasangan" :value="old('no_hp_pasangan', $applicationDetail->no_hp_pasangan)" required />
+                        <x-text-input name="email_pasangan" label="Email Pasangan" :value="old('email_pasangan', $applicationDetail->email_pasangan)" required />
+                        <x-text-input name="pekerjaan_pasangan" label="Pekerjaan Pasangan" :value="old('pekerjaan_pasangan', $applicationDetail->pekerjaan_pasangan)"
                             required />
                     </div>
                 </div>
@@ -93,22 +112,29 @@
             {{-- Data Penjamin --}}
             <div class="mt-3 pt-8">
                 <h3 class="text-lg font-semibold mb-6 pb-2 text-gray-800 border-b">Data Penjamin</h3>
+
+                {{-- Notifikasi kecil --}}
+                @if ($applicationDetail->exists && $applicationDetail->credit_application_id != $application->id)
+                    <div class="mb-4 text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-100">
+                        <i class="fa-solid fa-info-circle mr-1"></i> Data penjamin diisi otomatis dari pengajuan
+                        sebelumnya.
+                    </div>
+                @endif
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <x-text-input name="nama_penjamin" label="Nama Penjamin"
-                        value="{{ old('nama_penjamin', $applicationDetail->nama_penjamin ?? '') }}" required />
-                    <x-text-input name="no_ktp_penjamin" label="No KTP Penjamin"
-                        value="{{ old('no_ktp_penjamin', $applicationDetail->no_ktp_penjamin ?? '') }}" required />
+                    <x-text-input name="nama_penjamin" label="Nama Penjamin" :value="old('nama_penjamin', $applicationDetail->nama_penjamin)" required />
+                    <x-text-input name="no_ktp_penjamin" label="No KTP Penjamin" :value="old('no_ktp_penjamin', $applicationDetail->no_ktp_penjamin)" required />
                     <x-select-input name="hubungan_penjamin" label="Hubungan dengan Pemohon" :options="[
                         'Orang Tua' => 'Orang Tua',
                         'Saudara' => 'Saudara',
                         'Teman' => 'Teman',
+                        'Suami/Istri' => 'Suami/Istri',
                     ]"
-                        :value="$applicationDetail->hubungan_penjamin" required />
-                    <x-text-input name="no_hp_penjamin" label="Nomor HP Penjamin"
-                        value="{{ old('no_hp_penjamin', $applicationDetail->no_hp_penjamin ?? '') }}" required />
-                    <x-text-input name="email_penjamin" label="Email Penjamin" type="email"
-                        value="{{ old('email_penjamin', $applicationDetail->email_penjamin ?? '') }}" required />
-                    <x-textarea-input name="alamat_penjamin" label="Alamat Penjamin" required :value="$applicationDetail->alamat_penjamin" />
+                        :value="old('hubungan_penjamin', $applicationDetail->hubungan_penjamin)" required />
+                    <x-text-input name="no_hp_penjamin" label="Nomor HP Penjamin" :value="old('no_hp_penjamin', $applicationDetail->no_hp_penjamin)" required />
+                    <x-text-input name="email_penjamin" label="Email Penjamin" type="email" :value="old('email_penjamin', $applicationDetail->email_penjamin)"
+                        required />
+                    <x-textarea-input name="alamat_penjamin" label="Alamat Penjamin" required :value="old('alamat_penjamin', $applicationDetail->alamat_penjamin)" />
                 </div>
             </div>
 

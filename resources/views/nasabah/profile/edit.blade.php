@@ -98,7 +98,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Status Perkawinan</label>
                                 <select name="status_perkawinan" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    @foreach(['Belum Menikah', 'Menikah', 'Janda/Duda'] as $st)
+                                    @foreach(['Belum Menikah', 'Menikah', 'Cerai'] as $st)
                                         <option value="{{ $st }}" {{ old('status_perkawinan', $profile->status_perkawinan) == $st ? 'selected' : '' }}>{{ $st }}</option>
                                     @endforeach
                                 </select>
@@ -116,7 +116,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Agama</label>
                                 <select name="agama" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    @foreach(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $ag)
+                                    @foreach(['Islam', 'Protestan', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $ag)
                                         <option value="{{ $ag }}" {{ old('agama', $profile->agama) == $ag ? 'selected' : '' }}>{{ $ag }}</option>
                                     @endforeach
                                 </select>

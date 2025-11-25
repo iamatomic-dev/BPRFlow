@@ -6,33 +6,67 @@
         </div>
     </x-slot>
 
+    @if (session('success'))
+        <x-alert type="success">
+            <strong>Information:</strong> {{ session('success') }}
+        </x-alert>
+    @endif
+
     @if (session('warning'))
         <x-alert type="warning">
             <strong>Peringatan:</strong> {{ session('warning') }}
         </x-alert>
     @endif
 
-    @if (session('success'))
-        <x-alert type="success">
-            {{ session('success') }}
+    @if (session('error'))
+        <x-alert type="error">
+            <strong>Error:</strong> {{ session('error') }}
         </x-alert>
     @endif
 
     <section id="pengajuan" class="bg-white rounded-2xl shadow-md p-8 mx-auto">
+        {{-- LOGIC PENENTU APAKAH FIELD TERKUNCI --}}
+        @php
+            // Kunci field jika NO KTP sudah terisi di database
+            $isLocked = !empty($profile->no_ktp);
+        @endphp
+
+        {{-- INFO BOX JIKA TERKUNCI --}}
+        @if ($isLocked)
+            <div
+                class="mb-6 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100 text-sm flex items-start gap-3">
+                <svg class="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    Informasi identitas utama (<strong>Nama, KTP, Ibu Kandung, Jenis Kelamin</strong>)
+                    diambil dari data profil Anda sebelumnya. Hubungi admin jika terdapat kesalahan data.
+                </div>
+            </div>
+        @endif
         <h2 class="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">Data Pemohon</h2>
 
         <form method="POST" action="{{ route('pengajuan.step1.post') }}">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <x-text-input name="nama_lengkap" label="Nama Lengkap"
-                    value="{{ old('nama_lengkap', $profile->nama_lengkap ?? Auth::user()->name) }}" required readonly />
+                <x-text-input name="nama_lengkap" label="Nama Lengkap" :value="old('nama_lengkap', $profile->nama_lengkap)" :readonly="$isLocked" required />
                 <x-text-input name="email" label="Email" type="email"
                     value="{{ old('email', $profile->email ?? Auth::user()->email) }}" required readonly />
                 <x-select-input name="jenis_kelamin" label="Jenis Kelamin" :options="['Laki-laki' => 'Laki-laki', 'Perempuan' => 'Perempuan']" :value="$profile->jenis_kelamin"
-                    required />
-                <x-text-input name="no_ktp" label="Nomor KTP" value="{{ old('no_ktp', $profile->no_ktp) }}" required />
+                    :disabled="$isLocked" required />
+                @if ($isLocked)
+                    {{-- Hidden input ini wajib ada agar validasi 'required' di controller tetap lolos --}}
+                    <input type="hidden" name="jenis_kelamin" value="{{ $profile->jenis_kelamin }}">
+                @endif
+                <x-text-input name="no_ktp" label="Nomor KTP" value="{{ old('no_ktp', $profile->no_ktp) }}"
+                    :readonly="$isLocked" required />
+                <x-text-input name="nama_ibu_kandung" label="Nama Ibu Kandung"
+                    value="{{ old('nama_ibu_kandung', $profile->nama_ibu_kandung) }}" :readonly="$isLocked" required />
                 <x-text-input name="no_hp" label="Nomor HP" value="{{ old('no_hp', $profile->no_hp) }}" required />
+                <x-textarea-input name="alamat_tinggal" label="Alamat Tempat Tinggal" :value="$profile->alamat_tinggal" required />
+                <x-textarea-input name="alamat_ktp" label="Alamat Sesuai KTP" :value="$profile->alamat_ktp" required />
                 <x-select-input name="pendidikan_terakhir" label="Pendidikan Terakhir" :options="[
                     'SD' => 'SD',
                     'SMP' => 'SMP',
@@ -43,11 +77,14 @@
                     'S4' => 'S4',
                 ]"
                     :value="$profile->pendidikan_terakhir" required />
-                <x-textarea-input name="alamat_tinggal" label="Alamat Tempat Tinggal" :value="$profile->alamat_tinggal" required />
-                <x-textarea-input name="alamat_ktp" label="Alamat Sesuai KTP" :value="$profile->alamat_ktp" required />
-                <x-text-input name="nama_ibu_kandung" label="Nama Ibu Kandung"
-                    value="{{ old('nama_ibu_kandung', $profile->nama_ibu_kandung) }}" required />
-                <x-text-input name="agama" label="Agama" value="{{ old('agama', $profile->agama) }}" required />
+                <x-select-input name="agama" label="Agama" :options="[
+                    'Islam' => 'Islam',
+                    'Protestan' => 'Protestan',
+                    'Katolik' => 'Katolik',
+                    'Hindu' => 'Hindu',
+                    'Buddha' => 'Buddha',
+                    'Konghucu' => 'Konghucu',
+                ]" :value="$profile->agama" required />
                 <x-select-input name="status_perkawinan" label="Status Perkawinan" :options="['Belum Menikah' => 'Belum Menikah', 'Menikah' => 'Menikah', 'Cerai' => 'Cerai']" :value="$profile->status_perkawinan"
                     required />
                 <x-select-input name="status_rumah" label="Status Rumah" :options="['Milik Sendiri' => 'Milik Sendiri', 'Sewa' => 'Sewa']" :value="$profile->status_rumah"

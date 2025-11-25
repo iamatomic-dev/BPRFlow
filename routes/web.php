@@ -2,15 +2,31 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\AdminController;
+use App\Http\Controllers\Dashboard\ManagerController;
+use App\Http\Controllers\Dashboard\DirekturController;
+
 use App\Http\Controllers\Nasabah\NasabahProfileController;
 use App\Http\Controllers\Nasabah\PengajuanKreditController;
 use App\Http\Controllers\Nasabah\RiwayatKreditController;
 use App\Http\Controllers\Nasabah\SimulasiKreditController;
-use App\Http\Controllers\Dashboard\AdminController;
-use App\Http\Controllers\Dashboard\ManagerController;
-use App\Http\Controllers\Dashboard\DirekturController;
+
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminPengajuanController;
+use App\Http\Controllers\Admin\AdminSlikController;
+use App\Http\Controllers\Admin\AdminAngsuranController;
+use App\Http\Controllers\Admin\AdminLaporanController;
+
+use App\Http\Controllers\Manager\ManagerDashboardController;
+use App\Http\Controllers\Manager\ManagerRekomendasiController;
+
+use App\Http\Controllers\Direktur\DirekturDashboardController;
+use App\Http\Controllers\Direktur\DirekturPersetujuanController;
+
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +35,19 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        $user = Auth::user();
+
+        if ($user->hasRole('Nasabah')) {
+            return redirect()->route('nasabah.dashboard');
+        } elseif ($user->hasRole('Admin')) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->hasRole('Manager')) {
+            return redirect()->route('manager.dashboard');
+        } elseif ($user->hasRole('Direktur')) {
+            return redirect()->route('direktur.dashboard');
+        }
+    }
     return view('welcome');
 });
 
@@ -73,26 +102,123 @@ Route::middleware(['auth', 'role:Nasabah'])
         Route::put('/password', [NasabahProfileController::class, 'updatePassword'])->name('password-update');
     });
 
+
 // ====================== ADMIN ======================
 Route::middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/dashboard2', [AdminController::class, 'index'])->name('admin.dashboard2');
 });
+
+Route::middleware(['auth', 'role:Admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::controller(AdminPengajuanController::class)
+            ->prefix('pengajuan')
+            ->name('pengajuan.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/{id}', 'show')->name('show');
+            });
+        Route::controller(AdminSlikController::class)
+            ->prefix('slik')
+            ->name('slik.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/{id}/upload', 'edit')->name('edit');
+                Route::put('/{id}', 'update')->name('update');
+            });
+        Route::controller(AdminAngsuranController::class)
+            ->prefix('angsuran')
+            ->name('angsuran.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/{id}', 'show')->name('show');
+                Route::put('/bayar/{paymentId}', 'update')->name('update');
+            });
+        Route::controller(AdminLaporanController::class)
+            ->prefix('laporan')
+            ->name('laporan.')
+            ->group(function () {
+                Route::get('/nasabah', 'nasabah')->name('nasabah');
+                Route::get('/pengajuan', 'pengajuan')->name('pengajuan');
+                Route::get('/analisis', 'analisis')->name('analisis');
+                Route::get('/monitoring', 'monitoring')->name('monitoring');
+                Route::get('/rekapitulasi', 'rekapitulasi')->name('rekapitulasi');
+            });
+    });
 
 // ====================== MANAGER ======================
 Route::middleware(['auth', 'role:Manager'])->group(function () {
     Route::get('/manager/dashboard', [ManagerController::class, 'index'])->name('manager.dashboard');
 });
 
+Route::middleware(['auth', 'role:Manager'])
+    ->prefix('manager')
+    ->name('manager.')
+    ->group(function () {
+        Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('dashboard');
+
+        Route::controller(ManagerRekomendasiController::class)
+            ->prefix('rekomendasi')
+            ->name('rekomendasi.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/riwayat', 'riwayat')->name('riwayat');
+                Route::get('/{id}', 'show')->name('show');
+                Route::put('/{id}', 'update')->name('update');
+            });
+        Route::controller(AdminLaporanController::class)
+            ->prefix('laporan')
+            ->name('laporan.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/nasabah', 'nasabah')->name('nasabah');
+                Route::get('/pengajuan', 'pengajuan')->name('pengajuan');
+                Route::get('/analisis', 'analisis')->name('analisis');
+                Route::get('/monitoring', 'monitoring')->name('monitoring');
+                Route::get('/rekapitulasi', 'rekapitulasi')->name('rekapitulasi');
+            });
+    });
+
 // ====================== DIREKTUR ======================
 Route::middleware(['auth', 'role:Direktur'])->group(function () {
     Route::get('/direktur/dashboard', [DirekturController::class, 'index'])->name('direktur.dashboard');
 });
 
+Route::middleware(['auth', 'role:Direktur'])
+    ->prefix('direktur')
+    ->name('direktur.')
+    ->group(function () {
+
+        Route::get('/dashboard', [DirekturDashboardController::class, 'index'])->name('dashboard');
+
+        Route::controller(DirekturPersetujuanController::class)
+            ->prefix('persetujuan')
+            ->name('persetujuan.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/{id}', 'show')->name('show');
+                Route::put('/{id}', 'update')->name('update');
+            });
+        Route::controller(AdminLaporanController::class)
+            ->prefix('laporan')
+            ->name('laporan.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/nasabah', 'nasabah')->name('nasabah');
+                Route::get('/pengajuan', 'pengajuan')->name('pengajuan');
+                Route::get('/analisis', 'analisis')->name('analisis');
+                Route::get('/monitoring', 'monitoring')->name('monitoring');
+                Route::get('/rekapitulasi', 'rekapitulasi')->name('rekapitulasi');
+            });
+    });
+
 // ====================== PROFILE ======================
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:Admin|Manager|Direktur'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // ====================== LOGOUT ======================

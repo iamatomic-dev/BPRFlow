@@ -19,7 +19,13 @@
     @endif
 
     <select id="{{ $id ?? $name }}" name="{{ $name }}" {{-- {{ $required ? 'required' : '' }} --}} {{ $disabled ? 'disabled' : '' }}
-        {{ $attributes->merge(['class' => 'w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500']) }}>
+        {{ $attributes->merge([
+            'class' =>
+                'w-full rounded-lg shadow-sm border ' .
+                ($disabled
+                    ? 'bg-gray-100 text-gray-600 border-gray-300 cursor-not-allowed'
+                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'),
+        ]) }}>
         <option value="">-- Pilih {{ strtolower($label ?? $name) }} --</option>
         @foreach ($options as $key => $text)
             <option value="{{ $key }}" @selected((string) old($name, $value ?? '') === (string) $key)>

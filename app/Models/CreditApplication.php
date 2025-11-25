@@ -10,6 +10,7 @@ class CreditApplication extends Model
     use HasFactory;
 
     protected $fillable = [
+        'no_pengajuan',
         'user_id',
         'credit_facility_id',
         'tujuan_pinjaman',
@@ -18,14 +19,27 @@ class CreditApplication extends Model
         'sumber_pendapatan',
         'status',
         'submitted_at',
+        'slik_path',
+        'slik_status',
+        'slik_notes',
+        'manager_id',
+        'managed_at',
+        'recommendation_status',
+        'recommended_amount',
+        'recommended_tenor',
+        'manager_note',
         'requires_npwp',
+        'no_perjanjian_kredit',
+        'tgl_akad',
         'approved_by',
         'approved_at'
     ];
 
     protected $casts = [
         'submitted_at' => 'datetime',
+        'managed_at' => 'datetime',
         'approved_at' => 'datetime',
+        'tgl_akad' => 'date',
     ];
 
     public function user()
@@ -36,6 +50,11 @@ class CreditApplication extends Model
     public function nasabahProfile()
     {
         return $this->belongsTo(NasabahProfile::class, 'user_id', 'user_id');
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'manager_id');
     }
 
     public function creditFacility()
@@ -56,5 +75,10 @@ class CreditApplication extends Model
     public function documents()
     {
         return $this->hasMany(CreditDocument::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(CreditPayment::class);
     }
 }
