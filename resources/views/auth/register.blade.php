@@ -11,12 +11,13 @@
 <body class="bg-[#0d1b2a] min-h-screen flex flex-col items-center justify-start relative px-4 py-8">
 
     <!-- Shadow / Gradient Background Layer -->
-    <div class="absolute inset-0 bg-gradient-to-br from-[#0d1b2a] via-[#1b263b] to-[#415a77] opacity-60 blur-2xl -z-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-[#0d1b2a] via-[#1b263b] to-[#415a77] opacity-60 blur-2xl -z-10">
+    </div>
 
     <!-- Header -->
     <header class="flex items-center justify-between w-full max-w-5xl mb-12 z-10">
         <div class="flex items-center space-x-4">
-            <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo BPR Parinama" class="w-20 h-20">
+            <img src="{{ asset('images/Logo.png') }}" alt="Logo BPR Parinama" class="w-20 h-20">
             <h1 class="text-white text-2xl md:text-3xl font-bold whitespace-nowrap">
                 BPR Parinama Simfoni Indonesia
             </h1>
@@ -42,13 +43,13 @@
 
         <!-- Validation Errors -->
         @if ($errors->any())
-        <div class="mb-4 text-sm text-red-600">
-            <ul class="list-disc list-inside">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+            <div class="mb-4 text-sm text-red-600">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
 
         <form method="POST" action="{{ route('register') }}">
@@ -86,9 +87,9 @@
             <div class="mb-4">
                 {!! NoCaptcha::display() !!}
                 @if ($errors->has('g-recaptcha-response'))
-                <span class="text-red-500 text-sm">
-                    {{ $errors->first('g-recaptcha-response') }}
-                </span>
+                    <span class="text-red-500 text-sm">
+                        {{ $errors->first('g-recaptcha-response') }}
+                    </span>
                 @endif
             </div>
 

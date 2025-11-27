@@ -14,20 +14,27 @@
 
         <aside class="w-64 bg-[#0d1b2a] text-white flex-shrink-0">
             <div class="p-6 text-center border-b border-gray-700 flex items-center justify-center gap-2">
-                <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
+                <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
                 <div class="text-left">
                     <h2 class="text-lg font-bold leading-tight">BPR Parinama</h2>
                     <p class="text-xs">Simfoni Indonesia</p>
                 </div>
             </div>
             <nav class="mt-6">
-                <a href="#home" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-house mr-2"></i>Beranda</a>
-                <a href="#screening" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-clipboard-list mr-2"></i>Keputusan Screening Awal</a>
-                <a href="#analisis" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-chart-bar mr-2"></i>Analisis Kelayakan Kredit</a>
-                <a href="#keputusan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-handshake-angle mr-2"></i>Keputusan Kredit</a>
-                <a href="#monitoring" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-money-bill-transfer mr-2"></i>Monitoring Angsuran</a>
-                <a href="#status" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-chart-line mr-2"></i>Status Pengajuan</a>
-                <a href="#laporan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-print mr-2"></i>Cetak Laporan</a>
+                <a href="#home" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-house mr-2"></i>Beranda</a>
+                <a href="#screening" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-clipboard-list mr-2"></i>Keputusan Screening Awal</a>
+                <a href="#analisis" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-chart-bar mr-2"></i>Analisis Kelayakan Kredit</a>
+                <a href="#keputusan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-handshake-angle mr-2"></i>Keputusan Kredit</a>
+                <a href="#monitoring" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-money-bill-transfer mr-2"></i>Monitoring Angsuran</a>
+                <a href="#status" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-chart-line mr-2"></i>Status Pengajuan</a>
+                <a href="#laporan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-print mr-2"></i>Cetak Laporan</a>
             </nav>
         </aside>
 
@@ -46,8 +53,7 @@
                         <span>{{ auth()->user()->name }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 

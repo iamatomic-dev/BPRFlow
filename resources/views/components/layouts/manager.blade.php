@@ -22,7 +22,7 @@
         class="fixed top-0 left-0 z-50 h-screen w-64 bg-[#0d1b2a] text-white transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0">
 
         <div class="h-16 flex items-center justify-center border-b border-gray-700 px-6 gap-3 bg-[#0d1b2a]">
-            <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo" class="w-8 h-8 object-contain">
+            <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-8 h-8 object-contain">
             <div class="text-left">
                 <h2 class="text-base font-bold leading-tight">BPR Parinama</h2>
                 <p class="text-[10px] text-gray-400 tracking-wider">SIMFONI INDONESIA</p>

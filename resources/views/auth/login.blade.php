@@ -18,7 +18,7 @@
     <!-- Header -->
     <header class="flex items-center justify-between w-full max-w-5xl mb-12 z-10">
         <div class="flex items-center space-x-4">
-            <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo BPR Parinama" class="w-20 h-20">
+            <img src="{{ asset('images/Logo.png') }}" alt="Logo BPR Parinama" class="w-20 h-20">
             <h1 class="text-white text-2xl md:text-3xl font-bold whitespace-nowrap">
                 BPR Parinama Simfoni Indonesia
             </h1>
@@ -100,13 +100,13 @@
                 Login
             </button>
 
-            @if (Route::has('password.request'))
+            {{-- @if (Route::has('password.request'))
                 <div class="text-center mt-4">
                     <a href="{{ route('password.request') }}" class="text-sm text-gray-600 hover:text-gray-900">
                         Forgot your password?
                     </a>
                 </div>
-            @endif
+            @endif --}}
         </form>
     </div>
 

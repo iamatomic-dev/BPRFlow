@@ -25,13 +25,10 @@
     @endif
 
     <section id="pengajuan" class="bg-white rounded-2xl shadow-md p-8 mx-auto">
-        {{-- LOGIC PENENTU APAKAH FIELD TERKUNCI --}}
         @php
-            // Kunci field jika NO KTP sudah terisi di database
             $isLocked = !empty($profile->no_ktp);
         @endphp
 
-        {{-- INFO BOX JIKA TERKUNCI --}}
         @if ($isLocked)
             <div
                 class="mb-6 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100 text-sm flex items-start gap-3">
@@ -57,7 +54,6 @@
                 <x-select-input name="jenis_kelamin" label="Jenis Kelamin" :options="['Laki-laki' => 'Laki-laki', 'Perempuan' => 'Perempuan']" :value="$profile->jenis_kelamin"
                     :disabled="$isLocked" required />
                 @if ($isLocked)
-                    {{-- Hidden input ini wajib ada agar validasi 'required' di controller tetap lolos --}}
                     <input type="hidden" name="jenis_kelamin" value="{{ $profile->jenis_kelamin }}">
                 @endif
                 <x-text-input name="no_ktp" label="Nomor KTP" value="{{ old('no_ktp', $profile->no_ktp) }}"
@@ -74,7 +70,7 @@
                     'D3' => 'D3',
                     'S1' => 'S1',
                     'S2' => 'S2',
-                    'S4' => 'S4',
+                    'S3' => 'S3',
                 ]"
                     :value="$profile->pendidikan_terakhir" required />
                 <x-select-input name="agama" label="Agama" :options="[

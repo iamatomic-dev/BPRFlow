@@ -14,7 +14,7 @@
     <nav class="bg-[#0d1b2a] text-white shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center px-6">
             <div class="flex items-center space-x-3">
-                <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo BPR Parinama" class="w-10 h-10">
+                <img src="{{ asset('images/Logo.png') }}" alt="Logo BPR Parinama" class="w-10 h-10">
                 <h1 class="text-lg md:text-xl font-semibold tracking-wide">
                     BPR Parinama Simfoni Indonesia
                 </h1>
@@ -56,7 +56,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
                     <h4 class="text-xl font-semibold mb-2 text-[#0d1b2a]">Deposito Parinama</h4>
-                    <p class="text-gray-600">Investasikan dana Anda dengan bunga tinggi dan jaminan keamanan terbaik.</p>
+                    <p class="text-gray-600">Investasikan dana Anda dengan bunga tinggi dan jaminan keamanan terbaik.
+                    </p>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
@@ -66,7 +67,8 @@
 
                 <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
                     <h4 class="text-xl font-semibold mb-2 text-[#0d1b2a]">Kredit & Angsuran</h4>
-                    <p class="text-gray-600">Ajukan kredit dan pantau angsuran Anda secara real-time melalui platform digital kami.</p>
+                    <p class="text-gray-600">Ajukan kredit dan pantau angsuran Anda secara real-time melalui platform
+                        digital kami.</p>
                 </div>
             </div>
         </div>

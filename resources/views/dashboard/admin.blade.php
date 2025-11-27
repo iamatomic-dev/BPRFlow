@@ -16,20 +16,27 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-[#0d1b2a] text-white flex-shrink-0">
             <div class="p-6 text-center border-b border-gray-700 flex items-center justify-center gap-2">
-                <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
+                <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
                 <div class="text-left">
                     <h2 class="text-lg font-bold leading-tight">BPR Parinama</h2>
                     <p class="text-xs">Simfoni Indonesia</p>
                 </div>
             </div>
             <nav class="mt-6">
-                <a href="#home" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-house mr-2"></i>Beranda</a>
-                <a href="#pengajuan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-file-lines mr-2"></i>Data Pengajuan</a>
-                <a href="#slik" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-upload mr-2"></i>Upload Hasil SLIK</a>
-                <a href="#angsuran" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-money-bill-transfer mr-2"></i>Monitoring Angsuran</a>
-                <a href="#status" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-chart-line mr-2"></i>Status Pengajuan</a>
-                <a href="#jadwal" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-calendar-days mr-2"></i>Jadwal Angsuran</a>
-                <a href="#laporan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-print mr-2"></i>Cetak Laporan</a>
+                <a href="#home" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-house mr-2"></i>Beranda</a>
+                <a href="#pengajuan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-file-lines mr-2"></i>Data Pengajuan</a>
+                <a href="#slik" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-upload mr-2"></i>Upload Hasil SLIK</a>
+                <a href="#angsuran" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-money-bill-transfer mr-2"></i>Monitoring Angsuran</a>
+                <a href="#status" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-chart-line mr-2"></i>Status Pengajuan</a>
+                <a href="#jadwal" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-calendar-days mr-2"></i>Jadwal Angsuran</a>
+                <a href="#laporan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-print mr-2"></i>Cetak Laporan</a>
             </nav>
         </aside>
 
@@ -50,8 +57,7 @@
                         <span>{{ auth()->user()->name }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
@@ -106,7 +112,8 @@
                         <h2 class="text-2xl font-semibold text-gray-800">Data Pengajuan</h2>
                     </div>
 
-                    <p class="text-gray-600 mb-4">Daftar pengajuan nasabah. Klik "Lihat Detail" untuk melihat data lengkap.</p>
+                    <p class="text-gray-600 mb-4">Daftar pengajuan nasabah. Klik "Lihat Detail" untuk melihat data
+                        lengkap.</p>
 
                     <div class="overflow-x-auto">
                         <table class="min-w-full text-sm border border-gray-300">
@@ -128,7 +135,8 @@
                                     <td class="px-4 py-2 border text-right">Rp 30.000.000</td>
                                     <td class="px-4 py-2 border text-center">01-10-2025</td>
                                     <td class="px-4 py-2 border text-center">
-                                        <button class="lihat-detail-pengajuan bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
+                                        <button
+                                            class="lihat-detail-pengajuan bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
                                             data-id="PGJ-1001">
                                             Lihat Detail
                                         </button>
@@ -142,7 +150,8 @@
                 <!-- Detail -->
                 <div id="pengajuan-detail" class="bg-white p-6 rounded-lg shadow hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 id="pengajuanDetailTitle" class="text-2xl font-semibold text-gray-800">Detail Pengajuan - PGJ-1001</h2>
+                        <h2 id="pengajuanDetailTitle" class="text-2xl font-semibold text-gray-800">Detail Pengajuan -
+                            PGJ-1001</h2>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4 text-sm mb-6">
@@ -197,7 +206,8 @@
                                     <td class="px-4 py-2 border">Budi Santoso</td>
                                     <td class="px-4 py-2 border">Kredit Mikro</td>
                                     <td class="px-4 py-2 border text-center">
-                                        <button class="lihat-detail-slik bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
+                                        <button
+                                            class="lihat-detail-slik bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
                                             data-id="PGJ-1001">
                                             Lihat & Upload
                                         </button>
@@ -211,7 +221,8 @@
                 <!-- Detail SLIK & Upload -->
                 <div id="slik-detail" class="bg-white p-6 rounded-lg shadow hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 id="slikDetailTitle" class="text-2xl font-semibold text-gray-800">Upload Hasil SLIK - PGJ-1001</h2>
+                        <h2 id="slikDetailTitle" class="text-2xl font-semibold text-gray-800">Upload Hasil SLIK -
+                            PGJ-1001</h2>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4 text-sm mb-6">
@@ -229,10 +240,12 @@
                         </div>
 
                         <div class="flex gap-3">
-                            <button type="submit" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">
+                            <button type="submit"
+                                class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">
                                 Submit Upload
                             </button>
-                            <button type="button" id="kembaliSlikBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">
+                            <button type="button" id="kembaliSlikBtn"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">
                                 Kembali
                             </button>
                         </div>
@@ -247,7 +260,8 @@
                         <h2 class="text-2xl font-semibold text-gray-800">Monitoring Angsuran</h2>
                     </div>
 
-                    <p class="text-gray-600 mb-4">Daftar pinjaman yang dipantau. Klik "Lihat Detail" untuk jadwal & status pembayaran.</p>
+                    <p class="text-gray-600 mb-4">Daftar pinjaman yang dipantau. Klik "Lihat Detail" untuk jadwal &
+                        status pembayaran.</p>
 
                     <div class="overflow-x-auto">
                         <table class="min-w-full text-sm border border-gray-300">
@@ -267,7 +281,8 @@
                                     <td class="px-4 py-2 border text-right">Rp 30.000.000</td>
                                     <td class="px-4 py-2 border text-right">Rp 25.000.000</td>
                                     <td class="px-4 py-2 border text-center">
-                                        <button class="lihat-detail-angsuran bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
+                                        <button
+                                            class="lihat-detail-angsuran bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
                                             data-id="PK-2001">
                                             Lihat Detail
                                         </button>
@@ -281,8 +296,11 @@
                 <!-- Detail Angsuran -->
                 <div id="angsuran-detail" class="bg-white p-6 rounded-lg shadow hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 id="angsuranDetailTitle" class="text-2xl font-semibold text-gray-800">Detail Angsuran - PK-2001</h2>
-                        <a href="#" class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Download PDF</a>
+                        <h2 id="angsuranDetailTitle" class="text-2xl font-semibold text-gray-800">Detail Angsuran -
+                            PK-2001</h2>
+                        <a href="#"
+                            class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Download
+                            PDF</a>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4 text-sm mb-6">
@@ -314,7 +332,9 @@
                                     <td class="px-3 py-2 border text-right">Rp 1.000.000</td>
                                     <td class="px-3 py-2 border text-right">Rp 250.000</td>
                                     <td class="px-3 py-2 border text-right">Rp 1.250.000</td>
-                                    <td class="px-3 py-2 border text-center"><span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">Lunas</span></td>
+                                    <td class="px-3 py-2 border text-center"><span
+                                            class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">Lunas</span>
+                                    </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-3 py-2 border text-center">2</td>
@@ -322,14 +342,17 @@
                                     <td class="px-3 py-2 border text-right">Rp 1.000.000</td>
                                     <td class="px-3 py-2 border text-right">Rp 250.000</td>
                                     <td class="px-3 py-2 border text-right">Rp 1.250.000</td>
-                                    <td class="px-3 py-2 border text-center"><span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded">Belum Bayar</span></td>
+                                    <td class="px-3 py-2 border text-center"><span
+                                            class="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded">Belum
+                                            Bayar</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <div class="mt-6 text-right">
-                        <button id="kembaliAngsuranBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">Kembali</button>
+                        <button id="kembaliAngsuranBtn"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">Kembali</button>
                     </div>
                 </div>
             </section>
@@ -357,9 +380,13 @@
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-4 py-2 border">PGJ-1001</td>
                                     <td class="px-4 py-2 border">Budi Santoso</td>
-                                    <td class="px-4 py-2 border text-center"><span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-medium">Disetujui</span></td>
+                                    <td class="px-4 py-2 border text-center"><span
+                                            class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-medium">Disetujui</span>
+                                    </td>
                                     <td class="px-4 py-2 border text-center">
-                                        <button class="lihat-detail-status bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition" data-id="PGJ-1001">
+                                        <button
+                                            class="lihat-detail-status bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
+                                            data-id="PGJ-1001">
                                             Lihat Detail
                                         </button>
                                     </td>
@@ -372,7 +399,8 @@
                 <!-- Detail Status -->
                 <div id="status-detail" class="bg-white p-6 rounded-lg shadow hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 id="statusDetailTitle" class="text-2xl font-semibold text-gray-800">Detail Status - PGJ-1001</h2>
+                        <h2 id="statusDetailTitle" class="text-2xl font-semibold text-gray-800">Detail Status -
+                            PGJ-1001</h2>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4 text-sm mb-6">
@@ -385,7 +413,8 @@
                     </div>
 
                     <div class="mt-6 text-right">
-                        <button id="kembaliStatusBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">Kembali</button>
+                        <button id="kembaliStatusBtn"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">Kembali</button>
                     </div>
                 </div>
             </section>
@@ -415,7 +444,9 @@
                                     <td class="px-4 py-2 border">Budi Santoso</td>
                                     <td class="px-4 py-2 border text-center">29-08-2025</td>
                                     <td class="px-4 py-2 border text-center">
-                                        <button class="lihat-detail-jadwal bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition" data-id="PK-2001">Lihat Jadwal</button>
+                                        <button
+                                            class="lihat-detail-jadwal bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-3 py-1 rounded font-semibold transition"
+                                            data-id="PK-2001">Lihat Jadwal</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -425,8 +456,11 @@
 
                 <div id="jadwal-detail" class="bg-white p-6 rounded-lg shadow hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 id="jadwalDetailTitle" class="text-2xl font-semibold text-gray-800">Jadwal Angsuran - PK-2001</h2>
-                        <a href="#" class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Download PDF</a>
+                        <h2 id="jadwalDetailTitle" class="text-2xl font-semibold text-gray-800">Jadwal Angsuran -
+                            PK-2001</h2>
+                        <a href="#"
+                            class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Download
+                            PDF</a>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4 text-sm mb-6">
@@ -456,14 +490,17 @@
                                     <td class="px-3 py-2 border text-right">Rp 1.000.000</td>
                                     <td class="px-3 py-2 border text-right">Rp 250.000</td>
                                     <td class="px-3 py-2 border text-right">Rp 1.250.000</td>
-                                    <td class="px-3 py-2 border text-center"><span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">Lunas</span></td>
+                                    <td class="px-3 py-2 border text-center"><span
+                                            class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">Lunas</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <div class="mt-6 text-right">
-                        <button id="kembaliJadwalBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">Kembali</button>
+                        <button id="kembaliJadwalBtn"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">Kembali</button>
                     </div>
                 </div>
             </section>
@@ -496,7 +533,9 @@
                         </div>
 
                         <div>
-                            <button id="generateLaporanBtn" class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Tampilkan Preview</button>
+                            <button id="generateLaporanBtn"
+                                class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Tampilkan
+                                Preview</button>
                         </div>
                     </div>
 
@@ -510,7 +549,8 @@
                         </div>
 
                         <div class="mt-4 text-right">
-                            <button id="cetakBtn" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">Cetak</button>
+                            <button id="cetakBtn"
+                                class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">Cetak</button>
                         </div>
                     </div>
                 </div>

@@ -15,20 +15,27 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-[#0d1b2a] text-white flex-shrink-0">
             <div class="p-6 text-center border-b border-gray-700 flex items-center justify-center gap-2">
-                <img src="{{ Vite::asset('resources/images/Logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
+                <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
                 <div class="text-left">
                     <h2 class="text-lg font-bold leading-tight">BPR Parinama</h2>
                     <p class="text-xs">Simfoni Indonesia</p>
                 </div>
             </div>
             <nav class="mt-6">
-                <a href="#home" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-house mr-2"></i>Beranda</a>
-                <a href="#pengajuan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-file-lines mr-2"></i>Data Pengajuan</a>
-                <a href="#slik" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-upload mr-2"></i>Upload Hasil SLIK</a>
-                <a href="#angsuran" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-money-bill-transfer mr-2"></i>Monitoring Angsuran</a>
-                <a href="#status" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-chart-line mr-2"></i>Status Pengajuan</a>
-                <a href="#jadwal" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-calendar-days mr-2"></i>Jadwal Angsuran</a>
-                <a href="#laporan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i class="fa-solid fa-print mr-2"></i>Cetak Laporan</a>
+                <a href="#home" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-house mr-2"></i>Beranda</a>
+                <a href="#pengajuan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-file-lines mr-2"></i>Data Pengajuan</a>
+                <a href="#slik" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-upload mr-2"></i>Upload Hasil SLIK</a>
+                <a href="#angsuran" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-money-bill-transfer mr-2"></i>Monitoring Angsuran</a>
+                <a href="#status" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-chart-line mr-2"></i>Status Pengajuan</a>
+                <a href="#jadwal" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-calendar-days mr-2"></i>Jadwal Angsuran</a>
+                <a href="#laporan" class="block px-6 py-3 hover:bg-[#1b263b] transition"><i
+                        class="fa-solid fa-print mr-2"></i>Cetak Laporan</a>
             </nav>
         </aside>
 
@@ -48,8 +55,7 @@
                         <span>{{ auth()->user()->name }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
@@ -116,7 +122,9 @@
                                 <td class="px-4 py-2 border text-right">Rp 50.000.000</td>
                                 <td class="px-4 py-2 border text-center">05-09-2025</td>
                                 <td class="px-4 py-2 border text-center">
-                                    <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs font-medium">Dalam Proses</span>
+                                    <span
+                                        class="px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs font-medium">Dalam
+                                        Proses</span>
                                 </td>
                                 <td class="px-4 py-2 border text-center">
                                     <button id="lihatDetailBtn"
@@ -149,7 +157,8 @@
                 <form class="bg-white p-6 rounded-lg shadow">
                     <label class="block mb-2 font-medium">Pilih File Hasil SLIK</label>
                     <input type="file" class="mb-4 border rounded px-3 py-2 w-full">
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Upload</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Upload</button>
                 </form>
             </section>
 
@@ -174,7 +183,8 @@
                             <td class="px-4 py-2 border text-right">Rp 50.000.000</td>
                             <td class="px-4 py-2 border text-center">Rp 20.000.000</td>
                             <td class="px-4 py-2 border text-center">Rp 30.000.000</td>
-                            <td class="px-4 py-2 border text-center"><span class="text-yellow-600 font-semibold">Dalam Proses</span></td>
+                            <td class="px-4 py-2 border text-center"><span class="text-yellow-600 font-semibold">Dalam
+                                    Proses</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -201,14 +211,15 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
-                        @for($i=1; $i<=12; $i++)
+                        @for ($i = 1; $i <= 12; $i++)
                             <tr class="border-b hover:bg-gray-50 text-center">
-                            <td class="px-4 py-2 border">{{ $i }}</td>
-                            <td class="px-4 py-2 border">05-{{ str_pad($i,2,'0',STR_PAD_LEFT) }}-2025</td>
-                            <td class="px-4 py-2 border text-right">Rp 4.166.667</td>
-                            <td class="px-4 py-2 border"><span class="text-green-600 font-semibold">Belum Lunas</span></td>
+                                <td class="px-4 py-2 border">{{ $i }}</td>
+                                <td class="px-4 py-2 border">05-{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}-2025</td>
+                                <td class="px-4 py-2 border text-right">Rp 4.166.667</td>
+                                <td class="px-4 py-2 border"><span class="text-green-600 font-semibold">Belum
+                                        Lunas</span></td>
                             </tr>
-                            @endfor
+                        @endfor
                     </tbody>
                 </table>
             </section>
@@ -238,7 +249,9 @@
                         </div>
 
                         <div>
-                            <button id="generateLaporanBtn" class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Tampilkan Preview</button>
+                            <button id="generateLaporanBtn"
+                                class="bg-yellow-400 hover:bg-yellow-300 text-[#0d1b2a] px-4 py-2 rounded font-semibold">Tampilkan
+                                Preview</button>
                         </div>
                     </div>
 
@@ -252,7 +265,8 @@
                         </div>
 
                         <div class="mt-4 text-right">
-                            <button id="cetakBtn" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">Cetak</button>
+                            <button id="cetakBtn"
+                                class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">Cetak</button>
                         </div>
                     </div>
                 </div>
