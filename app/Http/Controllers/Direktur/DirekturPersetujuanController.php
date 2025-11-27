@@ -15,10 +15,9 @@ class DirekturPersetujuanController extends Controller
     public function index()
     {
         $applications = CreditApplication::with(['nasabahProfile', 'user', 'creditFacility'])
-            ->whereNotNull('recommendation_status')
+            ->where('status', 'Menunggu Verifikasi') 
             ->whereNull('approved_at')
-            ->where('status', '!=', 'Ditolak')
-            ->latest('managed_at')
+            ->latest('submitted_at')
             ->paginate(10);
 
         return view('direktur.persetujuan.index', compact('applications'));
@@ -82,7 +81,9 @@ class DirekturPersetujuanController extends Controller
 
         $request->validate([
             'decision' => 'required|in:approve,reject',
-            'note'     => 'nullable|string'
+            'note'     => 'nullable|string',
+            'final_amount' => 'required_if:decision,approve|numeric|min:1000000',
+            'final_tenor'  => 'required_if:decision,approve|numeric|min:1',
         ]);
 
         DB::beginTransaction();
@@ -93,29 +94,29 @@ class DirekturPersetujuanController extends Controller
                     'approved_by' => Auth::id(),
                     'approved_at' => now(),
                 ]);
-            } else {
-                $kodeFasilitas = $application->creditFacility->kode ?? 'GEN';
-                $noPK = $this->generateNoPK($kodeFasilitas);
 
-                $amount = $application->recommended_amount;
-                $tenor  = $application->recommended_tenor;
+            } else {
+                $amount = $request->final_amount;
+                $tenor  = $request->final_tenor;
+                
                 $facilityId = $application->credit_facility_id;
 
                 $tier = CreditFacilityTier::where('credit_facility_id', $facilityId)
                     ->where('min_plafond', '<=', $amount)
                     ->where(function ($q) use ($amount) {
                         $q->where('max_plafond', '>=', $amount)
-                            ->orWhereNull('max_plafond');
+                          ->orWhereNull('max_plafond');
                     })
                     ->first();
-                $bungaPersen = $tier ? $tier->bunga : 1.5;
+                
+                $bungaPersen = $tier ? $tier->bunga : 1.5; 
 
                 $angsuranPokok = $amount / $tenor;
                 $angsuranBunga = $amount * ($bungaPersen / 100);
                 $totalAngsuran = $angsuranPokok + $angsuranBunga;
 
                 $jatuhTempo = now()->addMonth();
-
+                
                 for ($i = 1; $i <= $tenor; $i++) {
                     CreditPayment::create([
                         'credit_application_id' => $application->id,
@@ -128,13 +129,17 @@ class DirekturPersetujuanController extends Controller
                     ]);
                 }
 
+                $kodeFasilitas = $application->creditFacility->kode ?? 'GEN'; 
+                $noPK = $this->generateNoPK($kodeFasilitas);
+
                 $application->update([
-                    'status'      => 'Disetujui',
-                    'approved_by' => Auth::id(),
-                    'approved_at' => now(),
-                    // Simpan Data Akad
+                    'status'               => 'Disetujui',
+                    'approved_by'          => Auth::id(),
+                    'approved_at'          => now(),
                     'no_perjanjian_kredit' => $noPK,
                     'tgl_akad'             => now(),
+                    'recommended_amount'   => $amount,
+                    'recommended_tenor'    => $tenor,
                 ]);
             }
 
@@ -142,7 +147,7 @@ class DirekturPersetujuanController extends Controller
 
             $statusMsg = $request->decision === 'approve' ? 'disetujui' : 'ditolak';
             return redirect()->route('direktur.persetujuan.index')
-                ->with('success', "Pengajuan berhasil $statusMsg.");
+                ->with('success', "Pengajuan berhasil $statusMsg dengan plafond Rp " . number_format($request->final_amount ?? 0));
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());

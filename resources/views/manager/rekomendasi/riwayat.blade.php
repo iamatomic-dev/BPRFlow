@@ -35,8 +35,8 @@
                         <th class="px-6 py-4">No. Tiket</th>
                         <th class="px-6 py-4">Nasabah</th>
                         <th class="px-6 py-4">Tgl Analisa</th>
-                        <th class="px-6 py-4">Keputusan Anda</th>
-                        <th class="px-6 py-4">Status Akhir</th>
+                        <th class="px-6 py-4">Keputusan Anda / Direktur</th>
+                        <th class="px-6 py-4">Status Akhir Direktur</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -53,7 +53,7 @@
                             <td class="px-6 py-4">
                                 {{ $app->managed_at ? $app->managed_at->format('d M Y H:i') : '-' }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 text-center">
                                 @if ($app->recommendation_status == 'Rekomendasi Disetujui')
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -69,7 +69,7 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 text-center">
                                 {{-- Status Akhir (Posisi di Direktur) --}}
                                 @php
                                     $statusClass = match ($app->status) {
@@ -83,7 +83,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <a href="{{ route('manager.rekomendasi.show', $app->id) }}"
+                                <a href="{{ route('manager.rekomendasi.detail', $app->id) }}"
                                     class="text-gray-500 hover:text-blue-600 transition" title="Lihat Detail">
                                     <i class="fa-solid fa-eye text-lg"></i>
                                 </a>

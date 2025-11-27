@@ -174,6 +174,21 @@
                         </div>
                         <h4 class="text-xl font-bold text-green-700">Disetujui</h4>
                         <p class="text-sm text-gray-500 mt-1">Selamat! Pengajuan Anda diterima.</p>
+                    @elseif($application->status == 'Lunas')
+                        <div
+                            class="w-16 h-16 bg-gray-800 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800">Lunas / Selesai</h4>
+                        <p class="text-sm text-gray-500 mt-1">Terima kasih, kewajiban kredit Anda telah selesai.</p>
+
+                        <a href="{{ route('pengajuan.step1') }}"
+                            class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition">
+                            Ajukan Kredit Baru
+                        </a>
                     @elseif($application->status == 'Ditolak')
                         <div
                             class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">

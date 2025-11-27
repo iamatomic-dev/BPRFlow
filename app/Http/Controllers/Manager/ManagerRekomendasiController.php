@@ -76,15 +76,28 @@ class ManagerRekomendasiController extends Controller
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('no_pengajuan', 'like', "%{$search}%")
-                  ->orWhereHas('nasabahProfile', function($subQ) use ($search) {
-                      $subQ->where('nama_lengkap', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('nasabahProfile', function ($subQ) use ($search) {
+                        $subQ->where('nama_lengkap', 'like', "%{$search}%");
+                    });
             });
         }
 
         $applications = $query->latest('managed_at')->paginate(10);
         return view('manager.rekomendasi.riwayat', compact('applications'));
+    }
+
+    public function detail($id)
+    {
+        $application = CreditApplication::with([
+            'nasabahProfile',
+            'creditFacility',
+            'detail',
+            'collateral',
+            'documents'
+        ])->findOrFail($id);
+
+        return view('manager.rekomendasi.detail', compact('application'));
     }
 }

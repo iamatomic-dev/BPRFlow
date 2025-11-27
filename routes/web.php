@@ -167,6 +167,7 @@ Route::middleware(['auth', 'role:Manager'])
                 Route::get('/riwayat', 'riwayat')->name('riwayat');
                 Route::get('/{id}', 'show')->name('show');
                 Route::put('/{id}', 'update')->name('update');
+                Route::get('/{id}/detail', 'detail')->name('detail');
             });
         Route::controller(AdminLaporanController::class)
             ->prefix('laporan')

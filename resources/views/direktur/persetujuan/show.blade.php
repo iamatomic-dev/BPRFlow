@@ -88,7 +88,7 @@
             {{-- 3. DATA NASABAH --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <x-detail-item label="Nama Nasabah" :value="$application->nasabahProfile->nama_lengkap" />
-                <x-detail-item label="Pekerjaan/Usaha" :value="$application->sumber_pendapatan" />
+                <x-detail-item label="Sumber Pendapatan" :value="$application->sumber_pendapatan" />
                 <x-detail-item label="Tujuan Pinjaman" :value="$application->tujuan_pinjaman" />
             </div>
         </div>
@@ -110,26 +110,42 @@
                     @method('PUT')
 
                     <div class="space-y-4 mb-6">
-                        <label
-                            class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-green-50 transition has-[:checked]:bg-green-50 has-[:checked]:border-green-500 has-[:checked]:ring-1 has-[:checked]:ring-green-500">
-                            <input type="radio" name="decision" value="approve"
-                                class="w-5 h-5 text-green-600 focus:ring-green-500">
+                        <label class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-green-50 transition has-[:checked]:bg-green-50 has-[:checked]:border-green-500 has-[:checked]:ring-1 has-[:checked]:ring-green-500">
+                            <input type="radio" name="decision" value="approve" id="radioApprove" class="w-5 h-5 text-green-600 focus:ring-green-500" onclick="toggleInputs(true)">
                             <div class="ml-3">
                                 <span class="block text-sm font-bold text-gray-900">SETUJUI PENGAJUAN</span>
-                                <span class="block text-xs text-gray-500">Cairkan dana sesuai rekomendasi
-                                    Manager.</span>
+                                <span class="block text-xs text-gray-500">Cairkan dana (Bisa edit nominal).</span>
                             </div>
                         </label>
 
-                        <label
-                            class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-red-50 transition has-[:checked]:bg-red-50 has-[:checked]:border-red-500 has-[:checked]:ring-1 has-[:checked]:ring-red-500">
-                            <input type="radio" name="decision" value="reject"
-                                class="w-5 h-5 text-red-600 focus:ring-red-500">
+                        <label class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-red-50 transition has-[:checked]:bg-red-50 has-[:checked]:border-red-500 has-[:checked]:ring-1 has-[:checked]:ring-red-500">
+                            <input type="radio" name="decision" value="reject" id="radioReject" class="w-5 h-5 text-red-600 focus:ring-red-500" onclick="toggleInputs(false)">
                             <div class="ml-3">
                                 <span class="block text-sm font-bold text-gray-900">TOLAK PENGAJUAN</span>
                                 <span class="block text-xs text-gray-500">Batalkan proses pengajuan ini.</span>
                             </div>
                         </label>
+                    </div>
+
+                    {{-- INPUT NOMINAL & TENOR (Hanya muncul jika Setuju) --}}
+                    <div id="approvalInputs" class="hidden bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase mb-3 border-b pb-1">Keputusan Final
+                            Direktur</h4>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Plafond Disetujui (Rp)</label>
+                            {{-- Logic Value: Prioritas Manager -> Prioritas Nasabah --}}
+                            <input type="number" name="final_amount"
+                                value="{{ $application->recommended_amount ?? $application->jumlah_pinjaman }}"
+                                class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 font-bold text-green-700">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tenor Disetujui (Bulan)</label>
+                            <input type="number" name="final_tenor"
+                                value="{{ $application->recommended_tenor ?? $application->jangka_waktu }}"
+                                class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500">
+                        </div>
                     </div>
 
                     <div class="mb-6">
@@ -145,4 +161,16 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            function toggleInputs(isApprove) {
+                const inputDiv = document.getElementById('approvalInputs');
+                if (isApprove) {
+                    inputDiv.classList.remove('hidden');
+                } else {
+                    inputDiv.classList.add('hidden');
+                }
+            }
+        </script>
+    @endpush
 </x-layouts.direktur>
