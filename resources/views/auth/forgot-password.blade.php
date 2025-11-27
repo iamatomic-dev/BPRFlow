@@ -1,25 +1,91 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupa Password | BPR Parinama Simfoni Indonesia</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="bg-[#0d1b2a] min-h-screen flex flex-col items-center justify-start relative px-4 py-8">
+
+    <!-- Shadow / Gradient Background Layer -->
+    <div class="absolute inset-0 bg-gradient-to-br from-[#0d1b2a] via-[#1b263b] to-[#415a77] opacity-60 blur-2xl -z-10">
     </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <!-- Header -->
+    <header class="flex items-center justify-between w-full max-w-5xl mb-12 z-10">
+        <div class="flex items-center space-x-4">
+            <img src="{{ asset('images/Logo.png') }}" alt="Logo BPR Parinama" class="w-20 h-20">
+            <h1 class="text-white text-2xl md:text-3xl font-bold whitespace-nowrap">
+                BPR Parinama Simfoni Indonesia
+            </h1>
         </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+        <div class="flex items-center space-x-3">
+            <a href="{{ url('/') }}"
+                class="border border-yellow-400 text-yellow-400 px-4 py-2 rounded-lg font-medium hover:bg-yellow-400 hover:text-[#0d1b2a] transition">
+                Beranda
+            </a>
+            <a href="{{ route('login') }}"
+                class="bg-yellow-400 text-[#0d1b2a] px-4 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition">
+                Login
+            </a>
         </div>
-    </form>
-</x-guest-layout>
+    </header>
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 z-10">
+        <h2 class="text-3xl font-bold text-center mb-6 text-[#0d1b2a]">
+            Lupa Password
+        </h2>
+
+        <!-- Validation Errors -->
+        @if ($errors->any())
+            <div class="mb-4 text-sm text-red-600">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session('status'))
+            <x-alert type="info">
+                <strong>Information:</strong> {{ session('status') }}
+            </x-alert>
+        @endif
+
+        <form method="POST" action="{{ route('password.email') }}">
+            @csrf
+            <p class="pb-5 text-sm text-gray-600 text-center">Masukan email anda di bawah. Kami akan mengirimkan tautan melalui email agar Anda dapat membuat kata sandi baru. Jika Anda tidak menerima email di kontak masuk coba periksa folder spam.</p>
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-medium">Email</label>
+                <input id="email" type="email" name="email" value="{{ old('email') }}" required
+                    class="w-full mt-2 border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:ring-yellow-400 focus:border-yellow-400">
+            </div>
+
+            <!-- reCAPTCHA -->
+            <div class="mb-4">
+                {!! NoCaptcha::display() !!}
+                @if ($errors->has('g-recaptcha-response'))
+                    <span class="text-red-500 text-sm">
+                        {{ $errors->first('g-recaptcha-response') }}
+                    </span>
+                @endif
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full bg-yellow-400 text-[#0d1b2a] font-semibold py-3 rounded-lg shadow hover:bg-yellow-300 transition mt-3">
+                Email Password Reset Link
+            </button>
+        </form>
+
+        {!! NoCaptcha::renderJs() !!}
+    </div>
+
+</body>
+
+</html>

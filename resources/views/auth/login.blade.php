@@ -100,13 +100,13 @@
                 Login
             </button>
 
-            {{-- @if (Route::has('password.request'))
+            @if (Route::has('password.request'))
                 <div class="text-center mt-4">
                     <a href="{{ route('password.request') }}" class="text-sm text-gray-600 hover:text-gray-900">
                         Forgot your password?
                     </a>
                 </div>
-            @endif --}}
+            @endif
         </form>
     </div>
 
