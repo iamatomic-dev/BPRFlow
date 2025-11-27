@@ -375,11 +375,11 @@ class PengajuanKreditController extends Controller
         if ($application->requires_npwp == 1) {
             $rules['dokumen.npwp_path'] = 'required|string';
         }
-        if ($application->sumber_pendapatan === 'Karyawan') {
+        if ($application->sumber_pendapatan === 'Gaji') {
             $rules['dokumen.surat_keterangan_bekerja_path'] = 'required|string';
             $rules['dokumen.slip_gaji_path']                = 'required|string';
         }
-        if ($application->sumber_pendapatan === 'Wirausaha') {
+        if ($application->sumber_pendapatan === 'Usaha') {
             $rules['dokumen.sku_path']  = 'required|string';
             $rules['dokumen.nota_path'] = 'required|string';
         }

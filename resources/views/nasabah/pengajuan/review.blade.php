@@ -177,12 +177,12 @@
                     {{ reviewFile('NPWP', $dokumenMap['npwp_path'] ?? null) }}
                 @endif
 
-                @if ($application->sumber_pendapatan === 'Karyawan')
+                @if ($application->sumber_pendapatan === 'Gaji')
                     {{ reviewFile('Surat Ket. Bekerja', $dokumenMap['surat_keterangan_bekerja_path'] ?? null) }}
                     {{ reviewFile('Slip Gaji (3 Bln)', $dokumenMap['slip_gaji_path'] ?? null) }}
                 @endif
 
-                @if ($application->sumber_pendapatan === 'Wirausaha')
+                @if ($application->sumber_pendapatan === 'Usaha')
                     {{ reviewFile('Surat Keterangan Usaha (SKU)', $dokumenMap['sku_path'] ?? null) }}
                     {{ reviewFile('Nota/Laporan Keuangan', $dokumenMap['nota_path'] ?? null) }}
                 @endif

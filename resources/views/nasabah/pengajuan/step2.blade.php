@@ -75,7 +75,7 @@
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-                <x-select-input name="sumber_pendapatan" label="Sumber Pendapatan" :options="['Karyawan' => 'Karyawan', 'Wirausaha' => 'Wirausaha']" :value="$application->sumber_pendapatan"
+                <x-select-input name="sumber_pendapatan" label="Sumber Pendapatan" :options="['Gaji' => 'Gaji', 'Usaha' => 'Usaha']" :value="$application->sumber_pendapatan"
                     required />
                 <x-textarea-input name="tujuan_pinjaman" label="Tujuan Penggunaan Pinjaman" required
                     :value="$application->tujuan_pinjaman" />
@@ -128,7 +128,6 @@
                         'Orang Tua' => 'Orang Tua',
                         'Saudara' => 'Saudara',
                         'Teman' => 'Teman',
-                        'Suami/Istri' => 'Suami/Istri',
                     ]"
                         :value="old('hubungan_penjamin', $applicationDetail->hubungan_penjamin)" required />
                     <x-text-input name="no_hp_penjamin" label="Nomor HP Penjamin" :value="old('no_hp_penjamin', $applicationDetail->no_hp_penjamin)" required />

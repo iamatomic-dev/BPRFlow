@@ -125,8 +125,8 @@
                         note="Format yang diizinkan: PDF, JPG, PNG (maks. 1MB)" />
                 </div>
 
-                {{-- Jika Karyawan --}}
-                <div x-show="sumberPendapatan === 'Karyawan'">
+                {{-- Jika Gaji --}}
+                <div x-show="sumberPendapatan === 'Gaji'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <x-input-file label="Surat Keterangan Bekerja" name="dokumen[surat_keterangan_bekerja_path]"
                             :value="old(
@@ -140,8 +140,8 @@
                     </div>
                 </div>
 
-                {{-- Jika Wirausaha --}}
-                <div x-show="sumberPendapatan === 'Wirausaha'">
+                {{-- Jika Usaha --}}
+                <div x-show="sumberPendapatan === 'Usaha'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <x-input-file label="Surat Keterangan Usaha (SKU)" name="dokumen[sku_path]" :value="old('dokumen.sku_path', $get_path('sku_path'))"
                             accept="image/*,.pdf" required="true"

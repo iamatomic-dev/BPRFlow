@@ -81,8 +81,25 @@ class AdminAngsuranController extends Controller
             'denda'             => $request->denda ?? 0,
             'status_pembayaran' => $status,
             'catatan_teller'    => $request->catatan,
-            'bukti_bayar'       => 'Manual by Admin', // Atau upload file jika ada
+            'bukti_bayar'       => 'Manual by Admin',
         ]);
+
+        $application = $payment->application;
+        
+        // Hitung ada berapa angsuran yang BELUM LUNAS (Status != Paid)
+        $sisaTagihan = $application->payments()
+            ->where('status_pembayaran', '!=', 'Paid')
+            ->count();
+
+        if ($sisaTagihan == 0) {
+            // Jika sisa 0, berarti SEMUA sudah Paid.
+            // Ubah status aplikasi utama menjadi 'Lunas'
+            $application->update([
+                'status' => 'Lunas'
+            ]);
+
+            return back()->with('success', 'Pembayaran diterima. SELAMAT! Kredit nasabah ini telah LUNAS.');
+        }
 
         return back()->with('success', 'Pembayaran angsuran ke-' . $payment->angsuran_ke . ' berhasil dicatat.');
     }
