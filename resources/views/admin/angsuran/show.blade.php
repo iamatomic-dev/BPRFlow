@@ -1,7 +1,22 @@
-<x-layouts.admin :title="'Kartu Angsuran'">
+@php
+    if (Auth::user()->hasRole('Direktur')) {
+        $layout = 'layouts.direktur';
+        $display = 'display: none;';
+        $back_link = route('direktur.angsuran.index');
+    } elseif (Auth::user()->hasRole('Manager')) {
+        $layout = 'layouts.manager';
+        $display = 'display: none;';
+        $back_link = route('manager.angsuran.index');
+    } else {
+        $layout = 'layouts.admin';
+        $display = 'display: table-cell;';
+        $back_link = route('admin.angsuran.index');
+    }
+@endphp
+<x-dynamic-component :component="$layout" :title="'Kartu Angsuran'">
     <x-slot name="header">
         <div class="flex items-center gap-4">
-            <a href="{{ route('admin.angsuran.index') }}" class="text-gray-500 hover:text-gray-700"><i
+            <a href="{{ $back_link }}" class="text-gray-500 hover:text-gray-700"><i
                     class="fa-solid fa-arrow-left"></i></a>
             <h1 class="text-xl font-bold text-gray-800">
                 Kartu Angsuran: {{ $application->nasabahProfile->nama_lengkap }}
@@ -22,7 +37,7 @@
                         <th class="px-6 py-4">Jumlah Bayar</th>
                         <th class="px-6 py-4">Denda</th>
                         <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+                        <th class="px-6 py-4 text-center" style='{{ $display }}'>Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -32,8 +47,6 @@
                             <td class="px-6 py-4">{{ $pay->jatuh_tempo->format('d M Y') }}</td>
                             <td class="px-6 py-4 font-semibold">Rp
                                 {{ number_format($pay->jumlah_angsuran, 0, ',', '.') }}</td>
-
-                            {{-- Data Realisasi --}}
                             <td class="px-6 py-4">{{ $pay->tanggal_bayar ? $pay->tanggal_bayar->format('d M Y') : '-' }}
                             </td>
                             <td class="px-6 py-4">
@@ -54,7 +67,7 @@
                                 @endif
                             </td>
 
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-6 py-4 text-center" style='{{ $display }}'>
                                 @if ($pay->status_pembayaran != 'Paid')
                                     <button
                                         onclick="openPaymentModal({{ $pay->id }}, {{ $pay->angsuran_ke }}, {{ $pay->jumlah_angsuran }})"
@@ -140,4 +153,4 @@
             }
         </script>
     @endpush
-</x-layouts.admin>
+</x-dynamic-component>

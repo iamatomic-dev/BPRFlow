@@ -47,6 +47,12 @@
                 <span class="font-medium">Persetujuan Kredit</span>
             </a>
 
+            <a href="{{ route('direktur.angsuran.index') }}"
+                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('direktur.angsuran.*') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
+                <i class="fa-solid fa-clock-rotate-left w-6 text-center mr-2 text-sm"></i>
+                <span class="font-medium">Kredit & Angsuran</span>
+            </a>
+
             @php
                 $isLaporanActive = request()->routeIs('direktur.laporan.*');
             @endphp

@@ -27,11 +27,9 @@ class NasabahProfileController extends Controller
         $user = Auth::user();
         $profile = NasabahProfile::where('user_id', $user->id)->first();
 
-        // 1. Tentukan field mana yang boleh divalidasi & diupdate
-        // Kita skip validasi field sensitif jika data profil sudah ada
         $rules = [
             'email'               => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'no_hp'               => ['required', 'numeric', 'digits_between:10,15'], // Rule unique bisa di skip disini jika mau simple, atau diaktifkan
+            'no_hp'               => ['required', 'numeric', 'digits_between:10,15'],
             'alamat_tinggal'      => ['required', 'string'],
             'alamat_ktp'          => ['required', 'string'],
             'status_rumah'        => ['required', 'string'],
@@ -41,13 +39,8 @@ class NasabahProfileController extends Controller
             'no_npwp'             => ['nullable', 'numeric', 'digits_between:15,16'],
         ];
 
-        // Jika profil baru (belum ada KTP), wajib validasi KTP & Nama Ibu
-        // Tapi jika sudah ada, kita abaikan inputnya (karena di view disabled)
-        if (!$profile || empty($profile->no_ktp)) {
-            $rules['no_ktp'] = ['required', 'numeric', 'digits:16', 'unique:nasabah_profiles'];
-            $rules['nama_lengkap'] = ['required', 'string', 'max:255'];
-            $rules['nama_ibu_kandung'] = ['required', 'string'];
-            $rules['jenis_kelamin'] = ['required', 'in:Laki-laki,Perempuan'];
+        if (!$profile || empty($profile->no_ktp) || empty($profile->nama_lengkap) || empty($profile->nama_ibu_kandung) || empty($profile->jenis_kelamin)) {
+            return back()->with('error', 'Harap lakukan pengajuan kredit terlebih dahulu, sebelum bisa mengubah profil');
         }
 
         $validated = $request->validate($rules);

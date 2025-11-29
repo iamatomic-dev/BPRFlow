@@ -1,4 +1,19 @@
-<x-layouts.admin :title="'Monitoring Angsuran'">
+@php
+    if (Auth::user()->hasRole('Direktur')) {
+        $layout = 'layouts.direktur';
+        $button_link = 'direktur.angsuran.show';
+        $button_text = 'Detail';
+    } elseif (Auth::user()->hasRole('Manager')) {
+        $layout = 'layouts.manager';
+        $button_link = 'manager.angsuran.show';
+        $button_text = 'Detail';
+    } else {
+        $layout = 'layouts.admin';
+        $button_link = 'admin.angsuran.show';
+        $button_text = 'Bayar';
+    }
+@endphp
+<x-dynamic-component :component="$layout" :title="'Monitoring Angsuran'">
     <x-slot name="header">
         <h1 class="text-xl font-bold text-gray-800">Kredit Aktif & Angsuran</h1>
     </x-slot>
@@ -91,9 +106,9 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <a href="{{ route('admin.angsuran.show', $credit->id) }}"
+                                <a href="{{ route($button_link, $credit->id); }}"
                                     class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-bold hover:bg-blue-700">
-                                    Bayar / Detail
+                                    {{ $button_text }}
                                 </a>
                             </td>
                         </tr>
@@ -103,4 +118,4 @@
         </div>
         <div class="p-4">{{ $credits->links() }}</div>
     </div>
-</x-layouts.admin>
+</x-dynamic-component>

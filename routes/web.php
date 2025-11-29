@@ -169,6 +169,13 @@ Route::middleware(['auth', 'role:Manager'])
                 Route::put('/{id}', 'update')->name('update');
                 Route::get('/{id}/detail', 'detail')->name('detail');
             });
+        Route::controller(AdminAngsuranController::class)
+            ->prefix('angsuran')
+            ->name('angsuran.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/{id}', 'show')->name('show');
+            });
         Route::controller(AdminLaporanController::class)
             ->prefix('laporan')
             ->name('laporan.')
@@ -201,6 +208,13 @@ Route::middleware(['auth', 'role:Direktur'])
                 Route::get('/', 'index')->name('index');
                 Route::get('/{id}', 'show')->name('show');
                 Route::put('/{id}', 'update')->name('update');
+            });
+        Route::controller(AdminAngsuranController::class)
+            ->prefix('angsuran')
+            ->name('angsuran.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/{id}', 'show')->name('show');
             });
         Route::controller(AdminLaporanController::class)
             ->prefix('laporan')
