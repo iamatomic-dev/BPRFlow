@@ -31,6 +31,7 @@ class CreditApplication extends Model
         'requires_npwp',
         'no_perjanjian_kredit',
         'tgl_akad',
+        'jam_akad',
         'approved_by',
         'approved_at'
     ];

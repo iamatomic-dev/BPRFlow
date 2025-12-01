@@ -7,34 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\CreditApplication;
 use App\Models\CreditPayment;
+use App\Models\CreditFacility;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminLaporanController extends Controller
 {
-    public function nasabah(Request $request)
-    {
-        $query = User::role('Nasabah')->with('nasabahProfile');
-
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
-
-        if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate . ' 23:59:59']);
-        }
-
-        $nasabahs = $query->latest()->get();
-
-        if ($request->export == 'pdf') {
-            $pdf = Pdf::loadView('admin.laporan.pdf.nasabah', compact('nasabahs', 'startDate', 'endDate'))
-                ->setPaper('a4', 'landscape');
-
-            return $pdf->download('Laporan_Nasabah_' . date('Y-m-d') . '.pdf');
-        }
-
-        return view('admin.laporan.nasabah', compact('nasabahs', 'startDate', 'endDate'));
-    }
-
     public function pengajuan(Request $request)
     {
         $query = CreditApplication::with(['nasabahProfile', 'creditFacility']);
@@ -127,29 +105,99 @@ class AdminLaporanController extends Controller
     {
         $year = $request->year ?? date('Y');
 
-        $byFacility = CreditApplication::where('status', 'Disetujui')
-            ->whereYear('approved_at', $year)
-            ->join('credit_facilities', 'credit_applications.credit_facility_id', '=', 'credit_facilities.id')
-            ->select('credit_facilities.nama', DB::raw('count(*) as total_nasabah'), DB::raw('sum(jumlah_pinjaman) as total_plafond'))
-            ->groupBy('credit_facilities.nama')
-            ->get();
+        // Ambil Semua Fasilitas Kredit
+        $data = CreditFacility::with(['creditApplications.payments'])
+            ->get()
+            ->map(function ($facility) use ($year) {
+                
+                // Filter aplikasi: Hanya yang Disetujui/Lunas di tahun tersebut (atau semua aktif)
+                // Disini kita ambil yang disetujui pada tahun tersebut
+                $apps = $facility->creditApplications->filter(function ($app) use ($year) {
+                    return in_array($app->status, ['Disetujui', 'Lunas']) && 
+                           $app->approved_at->format('Y') == $year;
+                });
 
-        $totalDisbursed = CreditApplication::where('status', 'Disetujui')->sum('jumlah_pinjaman');
-        $outstanding = CreditPayment::where('status_pembayaran', '!=', 'Paid')->sum('tagihan_pokok');
-        $profitBunga = CreditPayment::where('status_pembayaran', 'Paid')->sum('tagihan_bunga');
+                // Inisialisasi Variable Hitungan
+                $jumlahPlafond = 0;
+                
+                $angsuranPokok = 0;
+                $angsuranBunga = 0;
+                
+                $tunggakanPokok = 0;
+                $tunggakanBunga = 0;
+                $tunggakanDenda = 0;
+
+                foreach ($apps as $app) {
+                    $jumlahPlafond += $app->jumlah_pinjaman;
+
+                    // 1. Hitung ANGSURAN (Yang SUDAH DIBAYAR / PAID)
+                    // ambil dari payments yang statusnya 'Paid'
+                    $paidPayments = $app->payments->where('status_pembayaran', 'Paid');
+                    $angsuranPokok += $paidPayments->sum('tagihan_pokok');
+                    $angsuranBunga += $paidPayments->sum('tagihan_bunga');
+
+                    // 2. Hitung TUNGGAKAN (Jatuh Tempo < Sekarang & Belum Lunas)
+                    // ambil dari payments yang status != Paid DAN tanggal < hari ini
+                    $latePayments = $app->payments
+                        ->where('status_pembayaran', '!=', 'Paid')
+                        ->where('jatuh_tempo', '<', now());
+                    
+                    $tunggakanPokok += $latePayments->sum('tagihan_pokok');
+                    $tunggakanBunga += $latePayments->sum('tagihan_bunga');
+                    $tunggakanDenda += $latePayments->sum('denda');
+                }
+
+                // Masukkan hasil hitungan ke object facility
+                $facility->rekap = (object) [
+                    'jumlah' => $jumlahPlafond,
+                    'angsuran_pokok' => $angsuranPokok,
+                    'angsuran_bunga' => $angsuranBunga,
+                    'total_angsuran' => $angsuranPokok + $angsuranBunga,
+                    'tunggakan_pokok' => $tunggakanPokok,
+                    'tunggakan_bunga' => $tunggakanBunga,
+                    'tunggakan_denda' => $tunggakanDenda,
+                    'total_tunggakan' => $tunggakanPokok + $tunggakanBunga + $tunggakanDenda,
+                ];
+
+                return $facility;
+            });
 
         if ($request->export == 'pdf') {
-            $pdf = Pdf::loadView('admin.laporan.pdf.rekapitulasi', compact(
-                'byFacility',
-                'totalDisbursed',
-                'outstanding',
-                'profitBunga',
-                'year'
-            ))->setPaper('a4', 'portrait');
-
+            $pdf = Pdf::loadView('admin.laporan.pdf.rekapitulasi', compact('data', 'year'))
+                ->setPaper('a4', 'landscape');
             return $pdf->download('Laporan_Rekapitulasi_' . $year . '.pdf');
         }
 
-        return view('admin.laporan.rekapitulasi', compact('byFacility', 'totalDisbursed', 'outstanding', 'profitBunga', 'year'));
+        return view('admin.laporan.rekapitulasi', compact('data', 'year'));
+    }
+
+    public function realisasi(Request $request)
+    {
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        // Ambil Fasilitas beserta Aplikasi Kreditnya yang sudah cair (Disetujui/Lunas/Macet)
+        // Filter berdasarkan tanggal akad (realisasi)
+        $facilities = CreditFacility::with(['creditApplications' => function($q) use ($startDate, $endDate) {
+                // Filter Status: Yang sudah cair (bukan draft/menunggu/ditolak)
+                $q->whereIn('status', ['Disetujui', 'Lunas', 'Macet']);
+                
+                // Filter Tanggal Realisasi (Akad)
+                if ($startDate && $endDate) {
+                    $q->whereBetween('tgl_akad', [$startDate, $endDate . ' 23:59:59']);
+                }
+                
+                $q->with('nasabahProfile'); // Load profil nasabah
+            }])
+            ->get();
+
+        // Logic Export PDF
+        if ($request->export == 'pdf') {
+            $pdf = Pdf::loadView('admin.laporan.pdf.realisasi', compact('facilities', 'startDate', 'endDate'))
+                ->setPaper('a4', 'landscape');
+            return $pdf->download('Laporan_Realisasi.pdf');
+        }
+
+        return view('admin.laporan.realisasi', compact('facilities', 'startDate', 'endDate'));
     }
 }

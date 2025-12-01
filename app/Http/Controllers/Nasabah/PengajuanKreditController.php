@@ -75,6 +75,24 @@ class PengajuanKreditController extends Controller
         return view('nasabah.pengajuan.step1', compact('profile'));
     }
 
+    private function generateKodeNasabah()
+    {
+        $prefix = 'NSBPAR-' . date('Ym') . '-';
+        
+        $lastProfile = NasabahProfile::where('kode_nasabah', 'like', $prefix . '%')
+            ->orderBy('kode_nasabah', 'desc')
+            ->first();
+
+        if (!$lastProfile) {
+            $sequence = 1;
+        } else {
+            $lastNumber = (int) substr($lastProfile->kode_nasabah, -4);
+            $sequence = $lastNumber + 1;
+        }
+
+        return $prefix . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+    }
+
     public function postStep1(Request $request)
     {
         $userId = Auth::id();
@@ -95,6 +113,13 @@ class PengajuanKreditController extends Controller
             'no_npwp' => 'nullable|numeric|min_digits:15|max_digits:16',
             'status_rumah' => 'required|string',
         ]);
+
+        $profile = NasabahProfile::where('user_id', $userId)->first();
+        $kodeNasabah = $profile ? $profile->kode_nasabah : null;
+        if (empty($kodeNasabah)) {
+            $kodeNasabah = $this->generateKodeNasabah();
+        }
+        $validated['kode_nasabah'] = $kodeNasabah;
 
         // Simpan Profil
         NasabahProfile::updateOrCreate(

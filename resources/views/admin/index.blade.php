@@ -29,54 +29,62 @@
 
             {{-- 1. TOTAL PENGAJUAN --}}
             <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all border-l-4 border-blue-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500 mb-1">Total Pengajuan</h3>
-                        <p class="text-3xl font-bold text-gray-800">{{ $totalPengajuan }}</p>
+                <a href="{{ route('admin.pengajuan.index') }}">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-1">Total Pengajuan</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{ $totalPengajuan }}</p>
+                        </div>
+                        <div class="flex items-center justify-center bg-blue-100 w-12 h-12 rounded-full">
+                            <i class="fa-solid fa-file-invoice text-blue-600 text-xl"></i>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-center bg-blue-100 w-12 h-12 rounded-full">
-                        <i class="fa-solid fa-file-invoice text-blue-600 text-xl"></i>
-                    </div>
-                </div>
+                </a>
             </div>
 
             {{-- 2. MENUNGGU VERIFIKASI --}}
             <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all border-l-4 border-yellow-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500 mb-1">Menunggu Verifikasi</h3>
-                        <p class="text-3xl font-bold text-gray-800">{{ $menungguVerifikasi }}</p>
+                <a href="{{ route('admin.slik.index') }}">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-1">Menunggu Verifikasi</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{ $menungguVerifikasi }}</p>
+                        </div>
+                        <div class="flex items-center justify-center bg-yellow-100 w-12 h-12 rounded-full">
+                            <i class="fa-solid fa-hourglass-half text-yellow-600 text-xl"></i>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-center bg-yellow-100 w-12 h-12 rounded-full">
-                        <i class="fa-solid fa-hourglass-half text-yellow-600 text-xl"></i>
-                    </div>
-                </div>
+                </a>
             </div>
 
             {{-- 3. DISETUJUI --}}
             <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all border-l-4 border-green-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500 mb-1">Disetujui</h3>
-                        <p class="text-3xl font-bold text-gray-800">{{ $disetujui }}</p>
+                <a href="{{ route('admin.angsuran.index') }}">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-1">Disetujui</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{ $disetujui }}</p>
+                        </div>
+                        <div class="flex items-center justify-center bg-green-100 w-12 h-12 rounded-full">
+                            <i class="fa-solid fa-circle-check text-green-600 text-xl"></i>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-center bg-green-100 w-12 h-12 rounded-full">
-                        <i class="fa-solid fa-circle-check text-green-600 text-xl"></i>
-                    </div>
-                </div>
+                </a>
             </div>
 
             {{-- 4. DITOLAK --}}
             <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all border-l-4 border-red-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500 mb-1">Ditolak</h3>
-                        <p class="text-3xl font-bold text-gray-800">{{ $ditolak }}</p>
+                <a href="{{ route('admin.pengajuan.index') }}">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-1">Ditolak</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{ $ditolak }}</p>
+                        </div>
+                        <div class="flex items-center justify-center bg-red-100 w-12 h-12 rounded-full">
+                            <i class="fa-solid fa-circle-xmark text-red-600 text-xl"></i>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-center bg-red-100 w-12 h-12 rounded-full">
-                        <i class="fa-solid fa-circle-xmark text-red-600 text-xl"></i>
-                    </div>
-                </div>
+                </a>
             </div>
 
         </div>

@@ -11,7 +11,6 @@
             padding: 0;
         }
 
-        /* Header Style */
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -30,81 +29,48 @@
             color: #555;
         }
 
-        /* Sub-header (Judul Laporan) */
-        .report-title {
+        .sub-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .report-title h2 {
+        .sub-header h2 {
             font-size: 14px;
             text-decoration: underline;
             margin: 0 0 5px 0;
         }
 
-        /* Styling Tabel Ringkasan (Pengganti Grid Card) */
-        .summary-table {
-            width: 100%;
-            margin-bottom: 30px;
-            border-spacing: 10px;
-            /* Memberi jarak antar sel */
-            border-collapse: separate;
-        }
-
-        .summary-cell {
-            border: 1px solid #ccc;
-            padding: 15px;
-            text-align: center;
-            background-color: #f9fafb;
-            border-radius: 5px;
-            width: 33%;
-            /* Bagi rata 3 kolom */
-        }
-
-        .summary-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #666;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .summary-value {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Styling Tabel Data */
-        .data-table {
+        table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .data-table th,
-        .data-table td {
+        th,
+        td {
             border: 1px solid #333;
-            padding: 8px;
+            padding: 6px;
             text-align: left;
+            vertical-align: top;
         }
 
-        .data-table th {
-            background-color: #eee;
+        th {
+            background-color: #f2f2f2;
             font-weight: bold;
-        }
-
-        /* Helper Classes */
-        .text-right {
-            text-align: right;
+            text-align: center;
         }
 
         .text-center {
             text-align: center;
         }
 
-        .font-bold {
-            font-weight: bold;
+        .text-right {
+            text-align: right !important;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -120,60 +86,84 @@
 
     {{-- 2. JUDUL --}}
     <div class="report-title">
-        <h2>LAPORAN REKAPITULASI PORTOFOLIO KREDIT</h2>
+        <h2>LAPORAN REKAPITULASI</h2>
         <p>Tahun Buku: {{ $year }}</p>
     </div>
 
     {{-- 3. RINGKASAN (Pengganti Grid System) --}}
-    <table class="summary-table">
-        <tr>
-            {{-- Total Penyaluran --}}
-            <td class="summary-cell">
-                <span class="summary-label">Total Penyaluran (Disbursed)</span>
-                <div class="summary-value">Rp {{ number_format($totalDisbursed, 0, ',', '.') }}</div>
-            </td>
-
-            {{-- Outstanding --}}
-            <td class="summary-cell">
-                <span class="summary-label">Outstanding (Sisa Pokok)</span>
-                <div class="summary-value">Rp {{ number_format($outstanding, 0, ',', '.') }}</div>
-            </td>
-
-            {{-- Pendapatan Bunga --}}
-            <td class="summary-cell">
-                <span class="summary-label">Pendapatan Bunga</span>
-                <div class="summary-value">Rp {{ number_format($profitBunga, 0, ',', '.') }}</div>
-            </td>
-        </tr>
-    </table>
-
-    {{-- 4. RINCIAN TABEL --}}
-    <h3 style="font-size: 12px; margin-bottom: 10px;">Rincian Per Fasilitas Kredit</h3>
-
-    <table class="data-table">
+    <table>
         <thead>
+            {{-- Baris Header 1 --}}
             <tr>
-                <th style="width: 40%">Jenis Fasilitas</th>
-                <th style="width: 25%; text-align: center;">Jumlah Nasabah</th>
-                <th style="width: 35%; text-align: right;">Total Plafond Disetujui</th>
+                <th rowspan="2" style="width: 15%">JENIS PINJAMAN</th>
+                <th rowspan="2" style="width: 12%">JUMLAH</th>
+                <th colspan="2">ANGSURAN</th>
+                <th rowspan="2" style="width: 12%">TOTAL ANGSURAN</th>
+                <th colspan="3">TUNGGAKAN</th>
+                <th rowspan="2" style="width: 12%">TOTAL TUNGGAKAN</th>
+            </tr>
+            {{-- Baris Header 2 --}}
+            <tr>
+                <th>POKOK</th>
+                <th>BUNGA</th>
+                <th>POKOK</th>
+                <th>BUNGA</th>
+                <th>DENDA</th>
             </tr>
         </thead>
         <tbody>
-            @php $grandTotal = 0; @endphp
-            @foreach ($byFacility as $fac)
-                @php $grandTotal += $fac->total_plafond; @endphp
+            @php
+                // Inisialisasi Grand Total
+                $t_jumlah = 0;
+                $t_ang_pokok = 0;
+                $t_ang_bunga = 0;
+                $t_ang_total = 0;
+                $t_tung_pokok = 0;
+                $t_tung_bunga = 0;
+                $t_tung_denda = 0;
+                $t_tung_total = 0;
+            @endphp
+
+            @foreach ($data as $row)
+                @php
+                    // Akumulasi Grand Total
+                    $t_jumlah += $row->rekap->jumlah;
+                    $t_ang_pokok += $row->rekap->angsuran_pokok;
+                    $t_ang_bunga += $row->rekap->angsuran_bunga;
+                    $t_ang_total += $row->rekap->total_angsuran;
+                    $t_tung_pokok += $row->rekap->tunggakan_pokok;
+                    $t_tung_bunga += $row->rekap->tunggakan_bunga;
+                    $t_tung_denda += $row->rekap->tunggakan_denda;
+                    $t_tung_total += $row->rekap->total_tunggakan;
+                @endphp
                 <tr>
-                    <td>{{ $fac->nama }}</td>
-                    <td class="text-center">{{ $fac->total_nasabah }} Orang</td>
-                    <td class="text-right font-bold">Rp {{ number_format($fac->total_plafond, 0, ',', '.') }}</td>
+                    <td class="col-left">{{ strtoupper($row->nama) }}</td>
+                    <td class="text-right">{{ number_format($row->rekap->jumlah, 0, ',', '.') }}</td>
+
+                    {{-- Angsuran --}}
+                    <td class="text-right">{{ number_format($row->rekap->angsuran_pokok, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($row->rekap->angsuran_bunga, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($row->rekap->total_angsuran, 0, ',', '.') }}</td>
+
+                    {{-- Tunggakan --}}
+                    <td class="text-right">{{ number_format($row->rekap->tunggakan_pokok, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($row->rekap->tunggakan_bunga, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($row->rekap->tunggakan_denda, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($row->rekap->total_tunggakan, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
-            <tr style="background-color: #eee;">
-                <td class="text-right font-bold">TOTAL</td>
-                <td class="text-center font-bold">{{ $byFacility->sum('total_nasabah') }} Orang</td>
-                <td class="text-right font-bold">Rp {{ number_format($grandTotal, 0, ',', '.') }}</td>
+            <tr class="bg-yellow">
+                <td class="col-left">TOTAL</td>
+                <td class="text-right">{{ number_format($t_jumlah, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($t_ang_pokok, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($t_ang_bunga, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($t_ang_total, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($t_tung_pokok, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($t_tung_bunga, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($t_tung_denda, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($t_tung_total, 0, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>

@@ -8,8 +8,8 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- Font Awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -69,12 +69,6 @@
                 </button>
 
                 <div id="laporanMenu" class="space-y-1 mt-1 {{ $isLaporanActive ? 'block' : 'hidden' }}">
-
-                    <a href="{{ route('direktur.laporan.nasabah') }}"
-                        class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('direktur.laporan.nasabah') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
-                        Data Nasabah
-                    </a>
-
                     <a href="{{ route('direktur.laporan.pengajuan') }}"
                         class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('direktur.laporan.pengajuan') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
                         Status Pengajuan
@@ -88,6 +82,11 @@
                     <a href="{{ route('direktur.laporan.monitoring') }}"
                         class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('direktur.laporan.monitoring') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
                         Monitoring Angsuran
+                    </a>
+
+                    <a href="{{ route('direktur.laporan.realisasi') }}"
+                        class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('direktur.laporan.nasabah') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
+                        Realisasi
                     </a>
 
                     <a href="{{ route('direktur.laporan.rekapitulasi') }}"

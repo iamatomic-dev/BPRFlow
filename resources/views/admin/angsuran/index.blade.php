@@ -2,7 +2,7 @@
     if (Auth::user()->hasRole('Direktur')) {
         $layout = 'layouts.direktur';
         $button_link = 'direktur.angsuran.show';
-        $button_text = 'Detail';
+        $button_text = 'Detail / Reversal';
     } elseif (Auth::user()->hasRole('Manager')) {
         $layout = 'layouts.manager';
         $button_link = 'manager.angsuran.show';
@@ -10,7 +10,7 @@
     } else {
         $layout = 'layouts.admin';
         $button_link = 'admin.angsuran.show';
-        $button_text = 'Bayar';
+        $button_text = 'Detail / Bayar';
     }
 @endphp
 <x-dynamic-component :component="$layout" :title="'Monitoring Angsuran'">
@@ -106,7 +106,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <a href="{{ route($button_link, $credit->id); }}"
+                                <a href="{{ route($button_link, $credit->id) }}"
                                     class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-bold hover:bg-blue-700">
                                     {{ $button_text }}
                                 </a>

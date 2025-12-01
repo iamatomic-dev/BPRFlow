@@ -9,13 +9,15 @@ use App\Models\CreditPayment;
 use App\Models\CreditFacilityTier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class DirekturPersetujuanController extends Controller
 {
     public function index()
     {
         $applications = CreditApplication::with(['nasabahProfile', 'user', 'creditFacility'])
-            ->where('status', 'Menunggu Verifikasi') 
+            ->where('status', 'Menunggu Verifikasi')
+            ->whereNotNull('slik_path')
             ->whereNull('approved_at')
             ->latest('submitted_at')
             ->paginate(10);
@@ -36,11 +38,13 @@ class DirekturPersetujuanController extends Controller
         return view('direktur.persetujuan.show', compact('application'));
     }
 
-    private function generateNoPK($facilityCode)
+    private function generateNoPK($facilityCode, $date)
     {
-        $bulanRomawi = $this->getRomawi(date('n'));
-        $tahun = date('Y');
-        $formatTengah = "/PK-{$facilityCode}/{$bulanRomawi}/{$tahun}";
+        $bulanInput = date('n', strtotime($date)); // Ambil bulan dari input direktur
+        $tahunInput = date('Y', strtotime($date)); // Ambil tahun dari input direktur
+
+        $bulanRomawi = $this->getRomawi($bulanInput);
+        $formatTengah = "/PK-{$facilityCode}/{$bulanRomawi}/{$tahunInput}";
 
         $lastApp = CreditApplication::where('no_perjanjian_kredit', 'like', '%' . $formatTengah)
             ->orderBy('id', 'desc')
@@ -84,6 +88,8 @@ class DirekturPersetujuanController extends Controller
             'note'     => 'nullable|string',
             'final_amount' => 'required_if:decision,approve|numeric|min:1000000',
             'final_tenor'  => 'required_if:decision,approve|numeric|min:1',
+            'tgl_akad'     => 'required_if:decision,approve|date',
+            'jam_akad'     => 'required_if:decision,approve',
         ]);
 
         DB::beginTransaction();
@@ -94,34 +100,35 @@ class DirekturPersetujuanController extends Controller
                     'approved_by' => Auth::id(),
                     'approved_at' => now(),
                 ]);
-
             } else {
                 $amount = $request->final_amount;
                 $tenor  = $request->final_tenor;
-                
+                $tglAkad = $request->tgl_akad; // Ambil dari input
+                $jamAkad = $request->jam_akad; // Ambil dari input
+
                 $facilityId = $application->credit_facility_id;
 
                 $tier = CreditFacilityTier::where('credit_facility_id', $facilityId)
                     ->where('min_plafond', '<=', $amount)
                     ->where(function ($q) use ($amount) {
                         $q->where('max_plafond', '>=', $amount)
-                          ->orWhereNull('max_plafond');
+                            ->orWhereNull('max_plafond');
                     })
                     ->first();
-                
-                $bungaPersen = $tier ? $tier->bunga : 1.5; 
+
+                $bungaPersen = $tier ? $tier->bunga : 1.5;
 
                 $angsuranPokok = $amount / $tenor;
                 $angsuranBunga = $amount * ($bungaPersen / 100);
                 $totalAngsuran = $angsuranPokok + $angsuranBunga;
 
-                $jatuhTempo = now()->addMonth();
-                
+                $jatuhTempoAwal = Carbon::parse($tglAkad)->addMonth();
+
                 for ($i = 1; $i <= $tenor; $i++) {
                     CreditPayment::create([
                         'credit_application_id' => $application->id,
                         'angsuran_ke'       => $i,
-                        'jatuh_tempo'       => $jatuhTempo->copy()->addMonths($i - 1),
+                        'jatuh_tempo'       => $jatuhTempoAwal->copy()->addMonths($i - 1),
                         'tagihan_pokok'     => $angsuranPokok,
                         'tagihan_bunga'     => $angsuranBunga,
                         'jumlah_angsuran'   => $totalAngsuran,
@@ -129,15 +136,16 @@ class DirekturPersetujuanController extends Controller
                     ]);
                 }
 
-                $kodeFasilitas = $application->creditFacility->kode ?? 'GEN'; 
-                $noPK = $this->generateNoPK($kodeFasilitas);
+                $kodeFasilitas = $application->creditFacility->kode ?? 'GEN';
+                $noPK = $this->generateNoPK($kodeFasilitas, $tglAkad);
 
                 $application->update([
                     'status'               => 'Disetujui',
                     'approved_by'          => Auth::id(),
                     'approved_at'          => now(),
                     'no_perjanjian_kredit' => $noPK,
-                    'tgl_akad'             => now(),
+                    'tgl_akad'             => $tglAkad, // Simpan Tanggal
+                    'jam_akad'             => $jamAkad, // Simpan Jam
                     'recommended_amount'   => $amount,
                     'recommended_tenor'    => $tenor,
                 ]);
@@ -146,8 +154,10 @@ class DirekturPersetujuanController extends Controller
             DB::commit();
 
             $statusMsg = $request->decision === 'approve' ? 'disetujui' : 'ditolak';
+            /*return redirect()->route('direktur.persetujuan.index')
+                ->with('success', "Pengajuan berhasil $statusMsg dengan plafond Rp " . number_format($request->final_amount ?? 0));*/
             return redirect()->route('direktur.persetujuan.index')
-                ->with('success', "Pengajuan berhasil $statusMsg dengan plafond Rp " . number_format($request->final_amount ?? 0));
+                ->with('success', "Pengajuan berhasil $statusMsg");
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());

@@ -1,12 +1,16 @@
+@php
+    $biaya_provisi = ($application->recommended_amount * 1.5) / 100;
+    $jumlah_diterima = $application->recommended_amount - $biaya_provisi;
+@endphp
+
 <x-layouts.nasabah :title="'Detail Pengajuan'">
     <x-slot name="header">
         <div class="flex items-center justify-between">
             {{-- Update: Tampilkan No Pengajuan (Tiket) alih-alih ID --}}
             <h1 class="font-bold text-xl">
-                Detail Pengajuan <span
+                Pinjaman Aktif # <span
                     class="font-mono text-blue-600">{{ $application->no_pengajuan ?? '#' . $application->id }}</span>
             </h1>
-            <a href="{{ route('riwayat.index') }}" class="text-sm text-gray-600 hover:text-gray-900 ps-3">← Kembali</a>
         </div>
     </x-slot>
 
@@ -63,35 +67,15 @@
                         <dt class="text-sm text-gray-500">Jangka Waktu disetujui</dt>
                         <dd class="font-medium text-green-600">{{ $application->recommended_tenor }} Bulan</dd>
                     </div>
+                    <div>
+                        <dt class="text-sm text-gray-500">Potongan Admin & Provisi (1,5%)</dt>
+                        <dd class="font-medium text-orange-600">Rp {{ number_format($biaya_provisi, 0, ',', '.') }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm text-gray-500">Jumlah diterima</dt>
+                        <dd class="font-medium text-green-600">Rp {{ number_format($jumlah_diterima, 0, ',', '.') }}</dd>
+                    </div>
                 </dl>
-            </div>
-
-            {{-- 2. DATA AGUNAN --}}
-            <div class="bg-white rounded-2xl shadow-md p-6">
-                <h3 class="text-lg font-semibold mb-4 border-b pb-2">Agunan</h3>
-                @if ($application->collateral)
-                    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <dt class="text-sm text-gray-500">Jenis Sertifikat</dt>
-                            <dd class="font-medium">{{ $application->collateral->jenis_agunan }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm text-gray-500">No. Sertifikat</dt>
-                            <dd class="font-medium">{{ $application->collateral->nomor_sertifikat }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm text-gray-500">Atas Nama</dt>
-                            <dd class="font-medium">{{ $application->collateral->atas_nama }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm text-gray-500">Foto Agunan</dt>
-                            <a href="{{ Storage::url($application->collateral->foto_agunan) }}" target="_blank"
-                                class="text-blue-600 hover:underline text-sm font-semibold">Lihat Foto</a>
-                        </div>
-                    </dl>
-                @else
-                    <p class="text-gray-500 text-sm">Data agunan belum lengkap.</p>
-                @endif
             </div>
 
             {{-- 3. JADWAL ANGSURAN (BARU) --}}
@@ -161,7 +145,7 @@
         {{-- Kolom Kanan: Status --}}
         <div class="space-y-6">
             <div class="bg-white rounded-2xl shadow-md p-6">
-                <h3 class="text-lg font-semibold mb-4">Status Terkini</h3>
+                <h3 class="text-lg font-semibold mb-4 border-b pb-2">Status Terkini</h3>
 
                 <div class="text-center py-4">
                     @if ($application->status == 'Disetujui')
@@ -226,7 +210,7 @@
                     @endif
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
+                <div class="mt-6 pt-6 pb-3 border-t">
                     <div class="flex justify-between text-sm mb-2">
                         <span class="text-gray-500">Diajukan pada:</span>
                         <span
@@ -239,6 +223,34 @@
                         </div>
                     @endif
                 </div>
+            </div>
+
+            {{-- 2. DATA AGUNAN --}}
+            <div class="bg-white rounded-2xl shadow-md p-6">
+                <h3 class="text-lg font-semibold mb-4 border-b pb-2">Agunan</h3>
+                @if ($application->collateral)
+                    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <dt class="text-sm text-gray-500">Jenis Sertifikat</dt>
+                            <dd class="font-medium">{{ $application->collateral->jenis_agunan }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm text-gray-500">No. Sertifikat</dt>
+                            <dd class="font-medium">{{ $application->collateral->nomor_sertifikat }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm text-gray-500">Atas Nama</dt>
+                            <dd class="font-medium">{{ $application->collateral->atas_nama }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm text-gray-500">Foto Agunan</dt>
+                            <a href="{{ Storage::url($application->collateral->foto_agunan) }}" target="_blank"
+                                class="text-blue-600 hover:underline text-sm font-semibold">Lihat Foto</a>
+                        </div>
+                    </dl>
+                @else
+                    <p class="text-gray-500 text-sm">Data agunan belum lengkap.</p>
+                @endif
             </div>
         </div>
     </div>

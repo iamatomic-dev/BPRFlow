@@ -8,8 +8,8 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- Font Awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -45,9 +45,14 @@
                 <span class="font-medium">Pengajuan Kredit</span>
             </a>
             <a href="{{ route('riwayat.index') }}"
-                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('riwayat.*') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
+                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('riwayat.index') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
                 <i class="fa-solid fa-clock-rotate-left w-6 text-center mr-2 text-sm"></i>
                 <span class="font-medium">Status Pengajuan</span>
+            </a>
+            <a href="{{ route('riwayat.aktif') }}"
+                class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('riwayat.aktif') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">
+                <i class="fa-solid fa-calendar-check w-6 text-center mr-2 text-sm"></i>
+                <span class="font-medium">Pinjaman Aktif</span>
             </a>
             <a href="{{ route('simulasi.index') }}"
                 class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('simulasi.index') ? 'bg-[#1b263b] text-white' : 'text-gray-300 hover:bg-[#1b263b] hover:text-white' }}">

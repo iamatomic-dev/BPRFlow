@@ -4,10 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\AdminController;
-use App\Http\Controllers\Dashboard\ManagerController;
-use App\Http\Controllers\Dashboard\DirekturController;
-
 use App\Http\Controllers\Nasabah\NasabahProfileController;
 use App\Http\Controllers\Nasabah\PengajuanKreditController;
 use App\Http\Controllers\Nasabah\RiwayatKreditController;
@@ -24,6 +20,7 @@ use App\Http\Controllers\Manager\ManagerRekomendasiController;
 
 use App\Http\Controllers\Direktur\DirekturDashboardController;
 use App\Http\Controllers\Direktur\DirekturPersetujuanController;
+use App\Http\Controllers\Direktur\DirekturAngsuranController;
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +34,6 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     if (Auth::check()) {
         $user = Auth::user();
-
         if ($user->hasRole('Nasabah')) {
             return redirect()->route('nasabah.dashboard');
         } elseif ($user->hasRole('Admin')) {
@@ -56,58 +52,57 @@ Route::middleware(['auth', 'role:Nasabah', 'verified'])->group(function () {
     Route::get('/nasabah/dashboard', [DashboardController::class, 'index'])->name('nasabah.dashboard');
 });
 
-Route::middleware(['auth', 'role:Nasabah'])
-    ->prefix('pengajuan')
-    ->name('pengajuan.')
-    ->group(function () {
-        Route::get('/step-1', [PengajuanKreditController::class, 'createStep1'])->name('step1');
-        Route::post('/step-1', [PengajuanKreditController::class, 'postStep1'])->name('step1.post');
+Route::middleware(['auth', 'role:Nasabah'])->group(function () {
+    
+    Route::controller(PengajuanKreditController::class)
+        ->prefix('pengajuan')
+        ->name('pengajuan.')
+        ->group(function () {
+            Route::get('/step-1', 'createStep1')->name('step1');
+            Route::post('/step-1', 'postStep1')->name('step1.post');
+            
+            Route::get('/step-2', 'createStep2')->name('step2');
+            Route::post('/step-2', 'postStep2')->name('step2.post');
+            Route::get('/back-step-1', 'backToStep1')->name('back.step1');
 
-        Route::get('/step-2', [PengajuanKreditController::class, 'createStep2'])->name('step2');
-        Route::post('/step-2', [PengajuanKreditController::class, 'postStep2'])->name('step2.post');
-        Route::get('/back-step-1', [PengajuanKreditController::class, 'backToStep1'])->name('back.step1');
+            Route::get('/step-3', 'createStep3')->name('step3');
+            Route::post('/step-3', 'postStep3')->name('step3.post');
+            Route::post('/upload-temp', 'uploadTemp')->name('upload.temp');
+            Route::get('/back-step-2', 'backToStep2')->name('back.step2');
 
-        Route::get('/step-3', [PengajuanKreditController::class, 'createStep3'])->name('step3');
-        Route::post('/step-3', [PengajuanKreditController::class, 'postStep3'])->name('step3.post');
-        Route::post('/upload-temp', [PengajuanKreditController::class, 'uploadTemp'])->name('upload.temp');
-        Route::get('/back-step-2', [PengajuanKreditController::class, 'backToStep2'])->name('back.step2');
+            Route::get('/review', 'createReview')->name('review');
+            Route::post('/review', 'postReview')->name('review.post');
+            Route::get('/back-step-3', 'backToStep3')->name('back.step3');
+        });
 
-        Route::get('/review', [PengajuanKreditController::class, 'createReview'])->name('review');
-        Route::post('/review', [PengajuanKreditController::class, 'postReview'])->name('review.post');
-        Route::get('/back-step-3', [PengajuanKreditController::class, 'backToStep3'])->name('back.step3');
-    });
+    Route::controller(RiwayatKreditController::class)
+        ->prefix('riwayat')
+        ->name('riwayat.')
+        ->group(function () {
+            Route::get('/kredit', 'index')->name('index');
+            Route::get('/kredit/aktif', 'aktif')->name('aktif');
+            Route::get('/kredit/{id}', 'show')->name('show');
+        });
 
-Route::middleware(['auth', 'role:Nasabah'])
-    ->prefix('riwayat')
-    ->name('riwayat.')
-    ->group(function () {
-        Route::get('/kredit', [RiwayatKreditController::class, 'index'])->name('index');
-        Route::get('/kredit/{id}', [RiwayatKreditController::class, 'show'])->name('show');
-    });
+    Route::controller(SimulasiKreditController::class)
+        ->prefix('simulasi')
+        ->name('simulasi.')
+        ->group(function () {
+            Route::get('/kredit', 'index')->name('index');
+            Route::post('/kredit/hitung', 'calculate')->name('calculate');
+        });
 
-Route::middleware(['auth', 'role:Nasabah'])
-    ->prefix('simulasi')
-    ->name('simulasi.')
-    ->group(function () {
-        Route::get('/kredit', [SimulasiKreditController::class, 'index'])->name('index');
-        Route::post('/kredit/hitung', [SimulasiKreditController::class, 'calculate'])->name('calculate');
-    });
-
-Route::middleware(['auth', 'role:Nasabah'])
-    ->prefix('nasabah')
-    ->name('nasabah.')
-    ->group(function () {
-        Route::get('/profile', [NasabahProfileController::class, 'edit'])->name('profile-edit');
-        Route::patch('/profile', [NasabahProfileController::class, 'update'])->name('profile-update');
-        Route::put('/password', [NasabahProfileController::class, 'updatePassword'])->name('password-update');
-    });
-
-
-// ====================== ADMIN ======================
-Route::middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('/admin/dashboard2', [AdminController::class, 'index'])->name('admin.dashboard2');
+    Route::controller(NasabahProfileController::class)
+        ->prefix('nasabah')
+        ->name('nasabah.')
+        ->group(function () {
+            Route::get('/profile', 'edit')->name('profile-edit');
+            Route::patch('/profile', 'update')->name('profile-update');
+            Route::put('/password', 'updatePassword')->name('password-update');
+        });
 });
 
+// ====================== ADMIN ======================
 Route::middleware(['auth', 'role:Admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -140,19 +135,13 @@ Route::middleware(['auth', 'role:Admin'])
             ->prefix('laporan')
             ->name('laporan.')
             ->group(function () {
-                Route::get('/nasabah', 'nasabah')->name('nasabah');
                 Route::get('/pengajuan', 'pengajuan')->name('pengajuan');
                 Route::get('/analisis', 'analisis')->name('analisis');
                 Route::get('/monitoring', 'monitoring')->name('monitoring');
-                Route::get('/rekapitulasi', 'rekapitulasi')->name('rekapitulasi');
             });
     });
 
 // ====================== MANAGER ======================
-Route::middleware(['auth', 'role:Manager'])->group(function () {
-    Route::get('/manager/dashboard', [ManagerController::class, 'index'])->name('manager.dashboard');
-});
-
 Route::middleware(['auth', 'role:Manager'])
     ->prefix('manager')
     ->name('manager.')
@@ -181,24 +170,17 @@ Route::middleware(['auth', 'role:Manager'])
             ->name('laporan.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
-                Route::get('/nasabah', 'nasabah')->name('nasabah');
                 Route::get('/pengajuan', 'pengajuan')->name('pengajuan');
                 Route::get('/analisis', 'analisis')->name('analisis');
                 Route::get('/monitoring', 'monitoring')->name('monitoring');
-                Route::get('/rekapitulasi', 'rekapitulasi')->name('rekapitulasi');
             });
     });
 
 // ====================== DIREKTUR ======================
-Route::middleware(['auth', 'role:Direktur'])->group(function () {
-    Route::get('/direktur/dashboard', [DirekturController::class, 'index'])->name('direktur.dashboard');
-});
-
 Route::middleware(['auth', 'role:Direktur'])
     ->prefix('direktur')
     ->name('direktur.')
     ->group(function () {
-
         Route::get('/dashboard', [DirekturDashboardController::class, 'index'])->name('dashboard');
 
         Route::controller(DirekturPersetujuanController::class)
@@ -221,11 +203,17 @@ Route::middleware(['auth', 'role:Direktur'])
             ->name('laporan.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
-                Route::get('/nasabah', 'nasabah')->name('nasabah');
                 Route::get('/pengajuan', 'pengajuan')->name('pengajuan');
                 Route::get('/analisis', 'analisis')->name('analisis');
                 Route::get('/monitoring', 'monitoring')->name('monitoring');
+                Route::get('/realisasi', 'realisasi')->name('realisasi');
                 Route::get('/rekapitulasi', 'rekapitulasi')->name('rekapitulasi');
+            });
+        Route::controller(DirekturAngsuranController::class)
+            ->prefix('angsuran')
+            ->name('angsuran.')
+            ->group(function () {
+                Route::put('/reverse/{paymentId}', 'reverse')->name('reverse');
             });
     });
 

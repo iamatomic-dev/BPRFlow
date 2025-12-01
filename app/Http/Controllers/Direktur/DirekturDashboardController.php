@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Direktur;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CreditApplication;
+use App\Models\CreditPayment;
+use Illuminate\Support\Facades\DB;
 
 class DirekturDashboardController extends Controller
 {
@@ -30,12 +32,19 @@ class DirekturDashboardController extends Controller
         // 4. Ditolak
         $ditolak = CreditApplication::where('status', 'Ditolak')->count();
 
+        $totalDisbursed = CreditApplication::where('status', 'Disetujui')->sum('jumlah_pinjaman');
+        $outstanding = CreditPayment::where('status_pembayaran', '!=', 'Paid')->sum('tagihan_pokok');
+        $profitBunga = CreditPayment::where('status_pembayaran', 'Paid')->sum('tagihan_bunga');
+
         return view('direktur.index', compact(
             'user',
             'totalPengajuan',
             'menungguVerifikasi',
             'disetujui',
-            'ditolak'
+            'ditolak',
+            'totalDisbursed',
+            'outstanding',
+            'profitBunga'
         ));
     }
 }

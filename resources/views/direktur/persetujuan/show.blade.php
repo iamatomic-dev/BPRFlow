@@ -8,10 +8,10 @@
         </div>
     </x-slot>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {{-- KOLOM KIRI: SUMMARY & REKOMENDASI MANAGER (Penting) --}}
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-1 space-y-6">
 
             {{-- 1. REKOMENDASI MANAGER --}}
             <div class="bg-yellow-50 rounded-2xl shadow-sm border border-yellow-200 p-6 relative overflow-hidden">
@@ -127,24 +127,40 @@
                         </label>
                     </div>
 
-                    {{-- INPUT NOMINAL & TENOR (Hanya muncul jika Setuju) --}}
+                    {{-- INPUT NOMINAL, TENOR, & JADWAL AKAD (Hanya muncul jika Setuju) --}}
                     <div id="approvalInputs" class="hidden bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
-                        <h4 class="text-xs font-bold text-gray-500 uppercase mb-3 border-b pb-1">Keputusan Final
-                            Direktur</h4>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Plafond Disetujui (Rp)</label>
-                            {{-- Logic Value: Prioritas Manager -> Prioritas Nasabah --}}
-                            <input type="number" name="final_amount"
-                                value="{{ $application->recommended_amount ?? $application->jumlah_pinjaman }}"
-                                class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 font-bold text-green-700">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase mb-3 border-b pb-1">Keputusan Final Direktur</h4>
+                        
+                        {{-- Row 1: Plafond & Tenor --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Plafond Disetujui (Rp)</label>
+                                <input type="number" name="final_amount" 
+                                    value="{{ $application->recommended_amount ?? $application->jumlah_pinjaman }}" 
+                                    class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 font-bold text-green-700">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tenor (Bulan)</label>
+                                <input type="number" name="final_tenor" 
+                                    value="{{ $application->recommended_tenor ?? $application->jangka_waktu }}" 
+                                    class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500">
+                            </div>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tenor Disetujui (Bulan)</label>
-                            <input type="number" name="final_tenor"
-                                value="{{ $application->recommended_tenor ?? $application->jangka_waktu }}"
-                                class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500">
+                        {{-- Row 2: Jadwal Akad (BARU) --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Akad Kredit</label>
+                                <input type="date" name="tgl_akad" 
+                                    value="{{ date('Y-m-d') }}" 
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Jam Pelaksanaan</label>
+                                <input type="time" name="jam_akad" 
+                                    value="10:00" 
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
                         </div>
                     </div>
 

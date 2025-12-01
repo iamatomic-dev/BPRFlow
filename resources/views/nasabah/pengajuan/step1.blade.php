@@ -48,6 +48,14 @@
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @if ($profile->kode_nasabah)
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Nasabah</label>
+                        <input type="text" value="{{ $profile->kode_nasabah }}" readonly
+                            class="w-full md:w-1/3 bg-gray-100 border-gray-300 rounded-lg text-gray-600 font-mono font-bold shadow-sm cursor-not-allowed">
+                        <p class="text-xs text-gray-500 mt-1">Kode identitas unik Anda di sistem kami.</p>
+                    </div>
+                @endif
                 <x-text-input name="nama_lengkap" label="Nama Lengkap" :value="old('nama_lengkap', $profile->nama_lengkap)" :readonly="$isLocked" required />
                 <x-text-input name="email" label="Email" type="email"
                     value="{{ old('email', $profile->email ?? Auth::user()->email) }}" required readonly />

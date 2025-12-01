@@ -11,6 +11,7 @@ class NasabahProfile extends Model
 
     protected $fillable = [
         'user_id',
+        'kode_nasabah',
         'nama_lengkap',
         'jenis_kelamin',
         'no_ktp',

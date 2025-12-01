@@ -11,7 +11,7 @@
     <x-slot name="header">
         <h1 class="text-xl font-bold text-gray-800">Laporan Rekapitulasi</h1>
     </x-slot>
-    <div class="bg-white p-6 rounded-2xl shadow-sm no-print flex gap-4 items-center">
+    <div class="bg-white p-6 rounded-2xl shadow-sm no-print flex gap-4 items-center mb-5">
         <form method="GET" class="flex gap-4 items-center">
             <label class="text-sm font-bold">Tahun:</label>
             <select name="year" onchange="this.form.submit()"
@@ -27,73 +27,82 @@
         </a>
     </div>
 
-    <div class="mt-6 p-8 bg-white rounded-2xl shadow-sm print:shadow-none">
-        <div class="text-center border-b-2 border-gray-800 pb-4 mb-6 hidden print:block">
-            <h1 class="text-2xl font-bold uppercase">BPR Parinama Simfoni Indonesia</h1>
-            <h2 class="text-xl font-bold mt-2 underline">LAPORAN REKAPITULASI PORTOFOLIO KREDIT</h2>
-            <p>Tahun Buku: {{ $year }}</p>
-        </div>
-
-        {{-- SECTION 1: KARTU RINGKASAN --}}
-        <div class="grid grid-cols-3 gap-6 mb-8">
-            <div class="border p-4 rounded-xl bg-blue-50">
-                <h3 class="text-sm font-bold text-blue-800 uppercase">Total Penyaluran (Disbursed)</h3>
-                <p class="text-2xl font-bold text-gray-800 mt-1">Rp {{ number_format($totalDisbursed, 0, ',', '.') }}
-                </p>
-            </div>
-            <div class="border p-4 rounded-xl bg-red-50">
-                <h3 class="text-sm font-bold text-red-800 uppercase">Outstanding (Sisa Pokok)</h3>
-                <p class="text-2xl font-bold text-gray-800 mt-1">Rp {{ number_format($outstanding, 0, ',', '.') }}</p>
-            </div>
-            <div class="border p-4 rounded-xl bg-green-50">
-                <h3 class="text-sm font-bold text-green-800 uppercase">Pendapatan Bunga</h3>
-                <p class="text-2xl font-bold text-gray-800 mt-1">Rp {{ number_format($profitBunga, 0, ',', '.') }}</p>
-            </div>
-        </div>
-
-        {{-- SECTION 2: TABEL PER FASILITAS --}}
-        <h3 class="font-bold text-lg mb-4">Rincian Per Fasilitas Kredit (Tahun {{ $year }})</h3>
-        <table class="w-full text-sm text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-100 border-b-2 border-gray-300">
-                    <th class="p-3 border">Jenis Fasilitas</th>
-                    <th class="p-3 border text-center">Jumlah Nasabah</th>
-                    <th class="p-3 border text-right">Total Plafond Disetujui</th>
+    <div class="bg-white p-8 rounded-2xl shadow-sm overflow-x-auto">
+        <table class="w-full text-xs text-left border-collapse">
+            <thead class="text-center">
+                {{-- Baris Header 1 --}}
+                <tr class="bg-gray-100 border-b border-gray-300 print:bg-gray-200">
+                    <th class="p-2 border" rowspan="2" style="width: 15%">JENIS PINJAMAN</th>
+                    <th class="p-2 border" rowspan="2" style="width: 12%">JUMLAH</th>
+                    <th class="p-2 border" colspan="2">ANGSURAN</th>
+                    <th class="p-2 border" rowspan="2" style="width: 12%">TOTAL ANGSURAN</th>
+                    <th class="p-2 border" colspan="3">TUNGGAKAN</th>
+                    <th class="p-2 border" rowspan="2" style="width: 12%">TOTAL TUNGGAKAN</th>
+                </tr>
+                {{-- Baris Header 2 --}}
+                <tr class="bg-gray-100 border-b border-gray-300 print:bg-gray-200">
+                    <th class="p-2 border">POKOK</th>
+                    <th class="p-2 border">BUNGA</th>
+                    <th class="p-2 border">POKOK</th>
+                    <th class="p-2 border">BUNGA</th>
+                    <th class="p-2 border">DENDA</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($byFacility as $fac)
+                @php
+                    // Inisialisasi Grand Total
+                    $t_jumlah = 0;
+                    $t_ang_pokok = 0;
+                    $t_ang_bunga = 0;
+                    $t_ang_total = 0;
+                    $t_tung_pokok = 0;
+                    $t_tung_bunga = 0;
+                    $t_tung_denda = 0;
+                    $t_tung_total = 0;
+                @endphp
+
+                @foreach ($data as $row)
+                    @php
+                        // Akumulasi Grand Total
+                        $t_jumlah += $row->rekap->jumlah;
+                        $t_ang_pokok += $row->rekap->angsuran_pokok;
+                        $t_ang_bunga += $row->rekap->angsuran_bunga;
+                        $t_ang_total += $row->rekap->total_angsuran;
+                        $t_tung_pokok += $row->rekap->tunggakan_pokok;
+                        $t_tung_bunga += $row->rekap->tunggakan_bunga;
+                        $t_tung_denda += $row->rekap->tunggakan_denda;
+                        $t_tung_total += $row->rekap->total_tunggakan;
+                    @endphp
                     <tr class="border-b">
-                        <td class="p-3 border">{{ $fac->nama }}</td>
-                        <td class="p-3 border text-center">{{ $fac->total_nasabah }} Orang</td>
-                        <td class="p-3 border text-right font-bold">Rp
-                            {{ number_format($fac->total_plafond, 0, ',', '.') }}</td>
+                        <td class="p-2 border">{{ strtoupper($row->nama) }}</td>
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->jumlah, 0, ',', '.') }}</td>
+
+                        {{-- Angsuran --}}
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->angsuran_pokok, 0, ',', '.') }}</td>
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->angsuran_bunga, 0, ',', '.') }}</td>
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->total_angsuran, 0, ',', '.') }}</td>
+
+                        {{-- Tunggakan --}}
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->tunggakan_pokok, 0, ',', '.') }}</td>
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->tunggakan_bunga, 0, ',', '.') }}</td>
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->tunggakan_denda, 0, ',', '.') }}</td>
+                        <td class="p-2 border text-right">{{ number_format($row->rekap->total_tunggakan, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr class="bg-yellow border-b">
+                    <td class="p-2 border">TOTAL</td>
+                    <td class="p-2 border text-right">{{ number_format($t_jumlah, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right">{{ number_format($t_ang_pokok, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right">{{ number_format($t_ang_bunga, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right">{{ number_format($t_ang_total, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right">{{ number_format($t_tung_pokok, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right">{{ number_format($t_tung_bunga, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right">{{ number_format($t_tung_denda, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right">{{ number_format($t_tung_total, 0, ',', '.') }}</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
-    <x-slot name="style">
-        <style>
-            @media print {
-                .no-print {
-                    display: none;
-                }
-
-                body {
-                    background: white;
-                }
-
-                #sidebar,
-                header {
-                    display: none;
-                }
-
-                main {
-                    margin: 0;
-                    padding: 0;
-                }
-            }
-        </style>
-    </x-slot>
 </x-dynamic-component>

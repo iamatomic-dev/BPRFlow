@@ -9,6 +9,13 @@
         </x-alert>
     @endif
 
+    @if (session('warning'))
+        <x-alert type="warning">
+            <strong>Maaf!</strong> {{ session('warning') }}
+        </x-alert>
+    @endif
+
+
     @if (session('error'))
         <x-alert type="error">
             <strong>Gagal!</strong> {{ session('error') }}
@@ -51,8 +58,9 @@
                             <th class="px-6 py-4">No. Pengajuan</th>
                             <th class="px-6 py-4">Fasilitas</th>
                             <th class="px-6 py-4">Jumlah Pinjaman</th>
+                            <th class="px-6 py-4">Tanggal Akad</th>
+                            <th class="px-6 py-4">Jam Akad</th>
                             <th class="px-6 py-4 text-center">Status</th>
-                            <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -74,6 +82,12 @@
                                 <td class="px-6 py-4 font-semibold">
                                     Rp {{ number_format($app->jumlah_pinjaman, 0, ',', '.') }}
                                 </td>
+                                <td class="px-6 py-4 font-semibold">
+                                    {{ $app->tgl_akad ? \Carbon\Carbon::parse($app->tgl_akad)->format('d F Y') : '-' }}
+                                </td>
+                                <td class="px-6 py-4 font-semibold">
+                                    {{ $app->jam_akad ? \Carbon\Carbon::parse($app->jam_akad)->format('H:i') : '-' }}
+                                </td>
                                 <td class="px-6 py-4">
                                     @php
                                         $statusClasses = [
@@ -90,19 +104,6 @@
                                         {{ str_replace('_', ' ', ucfirst($app->status)) }}
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-right">
-                                    @if (in_array($app->status, ['draft_step1', 'draft_step2', 'draft_step3']))
-                                        <a href="{{ route('pengajuan.step1') }}"
-                                            class="text-yellow-600 hover:text-yellow-800 font-medium hover:underline">
-                                            Lanjutkan Draft →
-                                        </a>
-                                    @else
-                                        <a href="{{ route('riwayat.show', $app->id) }}"
-                                            class="text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                                            Lihat Detail
-                                        </a>
-                                    @endif
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -112,5 +113,9 @@
                 {{ $applications->links() }}
             </div>
         @endif
+    </div>
+
+    <div class="bg-gray-200 rounded-2xl border border-gray-300 overflow-hidden mt-6 p-4 text-red-500 text-sm font-semibold">
+        * Harap membawa file dokumen asli untuk dilampirkan saat pengikatan kredit.
     </div>
 </x-layouts.nasabah>

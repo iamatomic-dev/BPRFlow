@@ -34,4 +34,27 @@ class RiwayatKreditController extends Controller
 
         return view('nasabah.riwayat.show', compact('application'));
     }
+
+    public function aktif()
+    {
+        $application = CreditApplication::with([
+            'nasabahProfile', 
+            'creditFacility', 
+            'detail', 
+            'collateral', 
+            'documents',
+            'payments'
+        ])
+        ->where('user_id', Auth::id())
+        ->where('status', 'Disetujui')
+        ->latest('approved_at')
+        ->first();
+
+        if (!$application) {
+            return redirect()->route('riwayat.index')
+                ->with('warning', 'Anda tidak memiliki pinjaman yang sedang aktif (Disetujui).');
+        }
+
+        return view('nasabah.riwayat.show', compact('application'));
+    }
 }
