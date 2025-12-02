@@ -81,13 +81,14 @@
     <div class="header">
         <h1>BPR Parinama Simfoni Indonesia</h1>
         <p>Jalan Terusan Buah Batu No.25, Bandung 40266, Jawa Barat</p>
-        <p>Telp: (62) 812-5000-5066 | Web: bprparinama.co.id</p>
+
     </div>
 
     {{-- JUDUL & PERIODE --}}
     <div class="sub-header">
-        <h2>LAPORAN DATA PENGAJUAN</h2>
-        <p>Periode Akad: {{ $startDate ? date('d/m/Y', strtotime($startDate)) : 'Semua Data' }} s/d {{ $endDate ? date('d/m/Y', strtotime($endDate)) : '-' }}</p>
+        <h2>LAPORAN MONITORING ANGSURAN</h2>
+        <p>Periode Akad: {{ $startDate ? date('d/m/Y', strtotime($startDate)) : 'Semua Data' }} s/d
+            {{ $endDate ? date('d/m/Y', strtotime($endDate)) : '-' }}</p>
     </div>
 
     {{-- TABEL DATA --}}
@@ -105,20 +106,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($credits as $index => $c)
-            @php $sisa = $c->total_tagihan - $c->total_terbayar; @endphp
-            <tr>
-                <td class="text-center">{{ $index + 1 }}</td>
-                <td>{{ $c->no_perjanjian_kredit }}</td>
-                <td class="text-center">{{ $c->approved_at ? $c->approved_at->format('d/m/Y') : '-' }}</td>
-                <td>{{ $c->nasabahProfile->nama_lengkap }}</td>
-                <td class="text-right">Rp {{ number_format($c->jumlah_pinjaman, 0, ',', '.') }}</td>
-                <td class="text-center">{{ $c->jangka_waktu }} Bln</td>
-                <td class="text-center">{{ $c->sudah_bayar }} / {{ $c->total_angsuran }}</td>
-                <td class="text-right" style="font-weight:bold; color: {{ $sisa > 0 ? 'red' : 'green' }}">
-                    Rp {{ number_format($sisa, 0, ',', '.') }}
-                </td>
-            </tr>
+            @foreach ($credits as $index => $c)
+                @php $sisa = $c->total_tagihan - $c->total_terbayar; @endphp
+                <tr>
+                    <td class="text-center">{{ $index + 1 }}</td>
+                    <td>{{ $c->no_perjanjian_kredit }}</td>
+                    <td class="text-center">{{ $c->approved_at ? $c->approved_at->format('d/m/Y') : '-' }}</td>
+                    <td>{{ $c->nasabahProfile->nama_lengkap }}</td>
+                    <td class="text-right">Rp {{ number_format($c->jumlah_pinjaman, 0, ',', '.') }}</td>
+                    <td class="text-center">{{ $c->jangka_waktu }} Bln</td>
+                    <td class="text-center">{{ $c->sudah_bayar }} / {{ $c->total_angsuran }}</td>
+                    <td class="text-right" style="font-weight:bold; color: {{ $sisa > 0 ? 'red' : 'green' }}">
+                        Rp {{ number_format($sisa, 0, ',', '.') }}
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>

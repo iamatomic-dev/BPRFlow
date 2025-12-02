@@ -157,7 +157,7 @@
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-4">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Plafond Direkomendasikan</p>
-                            <p class="text-xl font-bold text-green-700">Rp {{ number_format($application->recommended_amount, 0, ',', '.') }}</p>
+                            <p class="text-xl font-bold text-green-700">Rp {{ number_format($application->manager_recommended_amount, 0, ',', '.') }}</p>
                         </div>
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Tenor Direkomendasikan</p>

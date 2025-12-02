@@ -72,6 +72,10 @@
             text-align: right;
             font-size: 11px;
         }
+
+        .font-bold {
+            font-weight: bold !important;
+        }
     </style>
 </head>
 
@@ -81,12 +85,12 @@
     <div class="header">
         <h1>BPR Parinama Simfoni Indonesia</h1>
         <p>Jalan Terusan Buah Batu No.25, Bandung 40266, Jawa Barat</p>
-        <p>Telp: (62) 812-5000-5066 | Web: bprparinama.co.id</p>
+
     </div>
 
     {{-- JUDUL & PERIODE --}}
     <div class="sub-header">
-        <h2>LAPORAN DATA PENGAJUAN</h2>
+        <h2>LAPORAN REALISASI PINJAMAN</h2>
         <p>Periode pengajuan: {{ $startDate ? date('d/m/Y', strtotime($startDate)) : 'Awal' }} s/d
             {{ $endDate ? date('d/m/Y', strtotime($endDate)) : 'Sekarang' }}</p>
     </div>
@@ -120,7 +124,7 @@
                 @if ($facility->creditApplications->count() > 0)
                     {{-- HEADER GROUP (NAMA FASILITAS) --}}
                     <tr class="group-header">
-                        <td colspan="9">{{ strtoupper($facility->nama) }}</td>
+                        <td colspan="9" class="font-bold">{{ strtoupper($facility->nama) }}</td>
                     </tr>
 
                     @php
@@ -172,12 +176,12 @@
 
                     {{-- BARIS SUB TOTAL --}}
                     <tr class="bg-subtotal">
-                        <td colspan="4">SUB TOTAL {{ strtoupper($facility->nama) }}</td>
-                        <td class="text-right">{{ number_format($subPlafond, 0, ',', '.') }}</td>
+                        <td colspan="4" class="font-bold">SUB TOTAL {{ strtoupper($facility->nama) }}</td>
+                        <td class="text-right font-bold">{{ number_format($subPlafond, 0, ',', '.') }}</td>
                         <td></td>
-                        <td class="text-right">{{ number_format($subPelunasan, 0, ',', '.') }}</td>
-                        <td class="text-right">{{ number_format($subNetting, 0, ',', '.') }}</td>
-                        <td class="text-right">{{ number_format($subNettingNasabah, 0, ',', '.') }}</td>
+                        <td class="text-right font-bold">{{ number_format($subPelunasan, 0, ',', '.') }}</td>
+                        <td class="text-right font-bold">{{ number_format($subNetting, 0, ',', '.') }}</td>
+                        <td class="text-right font-bold">{{ number_format($subNettingNasabah, 0, ',', '.') }}</td>
                     </tr>
 
                     @php
@@ -194,12 +198,12 @@
         {{-- FOOTER GRAND TOTAL --}}
         <tfoot>
             <tr class="bg-total">
-                <td colspan="4" class="text-center">TOTAL KESELURUHAN</td>
-                <td class="text-right">{{ number_format($grandTotalPlafond, 0, ',', '.') }}</td>
+                <td colspan="4" class="text-center font-bold">TOTAL KESELURUHAN</td>
+                <td class="text-right font-bold">{{ number_format($grandTotalPlafond, 0, ',', '.') }}</td>
                 <td></td>
-                <td class="text-right">{{ number_format($grandTotalPelunasan, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($grandTotalNetting, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($grandTotalNettingNasabah, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($grandTotalPelunasan, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($grandTotalNetting, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($grandTotalNettingNasabah, 0, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>

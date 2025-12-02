@@ -60,7 +60,7 @@
                                         <i class="fa-solid fa-check mr-1"></i> Disetujui
                                     </span>
                                     <div class="text-xs text-green-700 mt-1 font-bold">
-                                        Rp {{ number_format($app->recommended_amount) }}
+                                        Rp {{ number_format($app->manager_recommended_amount) }}
                                     </div>
                                 @else
                                     <span

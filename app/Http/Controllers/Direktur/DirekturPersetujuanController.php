@@ -85,7 +85,7 @@ class DirekturPersetujuanController extends Controller
 
         $request->validate([
             'decision' => 'required|in:approve,reject',
-            'note'     => 'nullable|string',
+            'direktur_note'=> 'nullable|string',
             'final_amount' => 'required_if:decision,approve|numeric|min:1000000',
             'final_tenor'  => 'required_if:decision,approve|numeric|min:1',
             'tgl_akad'     => 'required_if:decision,approve|date',

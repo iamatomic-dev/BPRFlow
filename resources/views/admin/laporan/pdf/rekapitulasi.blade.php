@@ -72,6 +72,10 @@
             text-align: right;
             font-size: 11px;
         }
+
+        .font-bold {
+            font-weight: bold !important;
+        }
     </style>
 </head>
 
@@ -81,7 +85,7 @@
     <div class="header">
         <h1>BPR Parinama Simfoni Indonesia</h1>
         <p>Jalan Terusan Buah Batu No.25, Bandung 40266, Jawa Barat</p>
-        <p>Telp: (62) 812-5000-5066 | Web: bprparinama.co.id</p>
+
     </div>
 
     {{-- 2. JUDUL --}}
@@ -155,15 +159,15 @@
         </tbody>
         <tfoot>
             <tr class="bg-yellow">
-                <td class="col-left">TOTAL</td>
-                <td class="text-right">{{ number_format($t_jumlah, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($t_ang_pokok, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($t_ang_bunga, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($t_ang_total, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($t_tung_pokok, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($t_tung_bunga, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($t_tung_denda, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($t_tung_total, 0, ',', '.') }}</td>
+                <td class="col-left font-bold">TOTAL</td>
+                <td class="text-right font-bold">{{ number_format($t_jumlah, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($t_ang_pokok, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($t_ang_bunga, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($t_ang_total, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($t_tung_pokok, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($t_tung_bunga, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($t_tung_denda, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">{{ number_format($t_tung_total, 0, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>

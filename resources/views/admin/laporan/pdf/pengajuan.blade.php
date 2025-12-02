@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Laporan Data Pengajuan</title>
+    <title>Laporan Persetujuan Kredit</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,12 +81,11 @@
     <div class="header">
         <h1>BPR Parinama Simfoni Indonesia</h1>
         <p>Jalan Terusan Buah Batu No.25, Bandung 40266, Jawa Barat</p>
-        <p>Telp: (62) 812-5000-5066 | Web: bprparinama.co.id</p>
     </div>
 
     {{-- JUDUL & PERIODE --}}
     <div class="sub-header">
-        <h2>LAPORAN DATA PENGAJUAN</h2>
+        <h2>LAPORAN PERSETUJUAN KREDIT</h2>
         <p>Periode pengajuan: {{ $startDate ? date('d/m/Y', strtotime($startDate)) : 'Awal' }} s/d
             {{ $endDate ? date('d/m/Y', strtotime($endDate)) : 'Sekarang' }}</p>
         @if (!empty($variabel))
@@ -98,29 +97,40 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 5%">No</th>
-                <th style="width: 10%">Tanggal Masuk</th>
-                <th style="width: 15%">No Pengajuan</th>
-                <th style="width: 15%">Nama Nasabah</th>
-                <th style="width: 25%">Fasilitas</th>
-                <th style="width: 15% text-right">Plafond</th>
-                <th style="width: 10%">Tenor</th>
-                <th style="width: 10%">Status</th>
+                <th style="width: 13%">NO PENGAJUAN</th>
+                <th style="width: 15%">NAMA NASABAH</th>
+                <th style="width: 12%">JENIS KREDIT</th>
+                <th style="width: 5%">TENOR</th>
+                <th style="width: 8%">JENIS SERTIFIKAT</th>
+                <th style="width: 12%">PLAFOND DIAJUKAN</th>
+                <th style="width: 13%">PLAFOND DISETUJUI</th>
+                <th style="width: 8%">TANGGAL PENGAJUAN</th>
+                <th style="width: 8%">TANGGAL REALISASI</th>
+                <th style="width: 5%">STATUS</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($applications as $index => $n)
-                <tr>
-                    <td class="p-3 border text-center">{{ $index + 1 }}</td>
-                    <td class="p-3 border font-bold">
-                        {{ $n->submitted_at ? $n->submitted_at->format('d/m/Y') : '-' }}</td>
-                    <td class="p-3 border">{{ $n->no_pengajuan }}</td>
-                    <td class="p-3 border font-bold">{{ $n->nasabahProfile->nama_lengkap }}</td>
-                    <td class="p-3 border">{{ $n->creditFacility->nama }}</td>
-                    <td class="p-3 border text-right">Rp {{ number_format($n->jumlah_pinjaman, 0, ',', '.') }}</td>
-                    <td class="p-3 border text-center">{{ $n->jangka_waktu }} Bln</td>
-                    <td class="p-3 border text-center">{{ $n->status }}</td>
-                </tr>
+            @foreach($applications as $app)
+            <tr>
+                <td>{{ $app->no_pengajuan }}</td>
+                <td>{{ $app->nasabahProfile->nama_lengkap ?? '-' }}</td>
+                <td>{{ $app->creditFacility->nama ?? '-' }}</td>
+                <td class="text-center">
+                    {{ $app->recommended_tenor ?? $app->jangka_waktu }} Bln
+                </td>
+                <td class="text-center">{{ $app->collateral->jenis_agunan ?? '-' }}</td>
+                <td class="text-right">Rp {{ number_format($app->jumlah_pinjaman, 0, ',', '.') }}</td>
+                <td class="text-right">
+                    @if($app->status == 'Disetujui' || $app->status == 'Lunas')
+                        Rp {{ number_format($app->recommended_amount ?? $app->jumlah_pinjaman, 0, ',', '.') }}
+                    @else
+                        -
+                    @endif
+                </td>
+                <td class="text-center">{{ $app->submitted_at ? $app->submitted_at->format('d/m/Y') : '-' }}</td>
+                <td class="text-center">{{ $app->tgl_akad ? $app->tgl_akad->format('d/m/Y') : '-' }}</td>
+                <td class="text-center font-bold">{{ strtoupper($app->status) }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>

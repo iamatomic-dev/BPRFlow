@@ -92,15 +92,15 @@
             </tbody>
             <tfoot>
                 <tr class="bg-yellow border-b">
-                    <td class="p-2 border">TOTAL</td>
-                    <td class="p-2 border text-right">{{ number_format($t_jumlah, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($t_ang_pokok, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($t_ang_bunga, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($t_ang_total, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($t_tung_pokok, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($t_tung_bunga, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($t_tung_denda, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($t_tung_total, 0, ',', '.') }}</td>
+                    <td class="p-2 border font-bold">TOTAL</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_jumlah, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_ang_pokok, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_ang_bunga, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_ang_total, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_tung_pokok, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_tung_bunga, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_tung_denda, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($t_tung_total, 0, ',', '.') }}</td>
                 </tr>
             </tfoot>
         </table>

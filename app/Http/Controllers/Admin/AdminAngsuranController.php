@@ -82,6 +82,9 @@ class AdminAngsuranController extends Controller
             'status_pembayaran' => $status,
             'catatan_teller'    => $request->catatan,
             'bukti_bayar'       => 'Manual by Admin',
+            'reversal_date'     => null,
+            'reversal_note'     => null,
+            'reversal_user_id'  => null,
         ]);
 
         $application = $payment->application;

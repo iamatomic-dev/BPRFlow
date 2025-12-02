@@ -81,12 +81,12 @@
     <div class="header">
         <h1>BPR Parinama Simfoni Indonesia</h1>
         <p>Jalan Terusan Buah Batu No.25, Bandung 40266, Jawa Barat</p>
-        <p>Telp: (62) 812-5000-5066 | Web: bprparinama.co.id</p>
+
     </div>
 
     {{-- JUDUL & PERIODE --}}
     <div class="sub-header">
-        <h2>LAPORAN DATA PENGAJUAN</h2>
+        <h2>LAPORAN ANALISIS KREDIT</h2>
         <p>Periode pengajuan: {{ $startDate ? date('d/m/Y', strtotime($startDate)) : 'Awal' }} s/d
             {{ $endDate ? date('d/m/Y', strtotime($endDate)) : 'Sekarang' }}</p>
     </div>
@@ -97,10 +97,13 @@
             <tr>
                 <th width="5%">No</th>
                 <th width="10%">Tgl Masuk</th>
-                <th width="15%">No. Pengajuan</th>
-                <th width="20%">Nasabah</th>
+                <th width="10%">No. Pengajuan</th>
+                <th width="10%">Nasabah</th>
                 <th width="15%">Hasil SLIK</th>
                 <th width="15%">Rekomendasi Manager</th>
+                <th width="10%">Catatan Manager</th>
+                <th width="10%">Catatan Direktur</th>
+                <th width="10%">Plf Disetujui</th>
                 <th width="10%">Keputusan</th>
             </tr>
         </thead>
@@ -119,12 +122,16 @@
                         @if ($app->recommendation_status)
                             {{ $app->recommendation_status }}<br>
                             @if ($app->recommendation_status == 'Rekomendasi Disetujui')
-                                <span style="color:green">Rp {{ number_format($app->recommended_amount) }}</span>
+                                <span style="color:green">Rp
+                                    {{ number_format($app->manager_recommended_amount) }}</span>
                             @endif
                         @else
                             -
                         @endif
                     </td>
+                    <td>{{ $app->catatan_manager }}</td>
+                    <td>{{ $app->catatan_direktur }}</td>
+                    <td>{{ number_format($app->recommended_amount) }}}</td>
                     <td style="text-align:center; font-weight:bold">{{ $app->status }}</td>
                 </tr>
             @endforeach

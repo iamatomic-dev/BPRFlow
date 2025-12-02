@@ -7,9 +7,9 @@
         $layout = 'layouts.admin';
     }
 @endphp
-<x-dynamic-component :component="$layout" :title="'Laporan Analisis Kredit'">
+<x-dynamic-component :component="$layout" :title="'Laporan Realisasi Pinjaman'">
     <x-slot name="header">
-        <h1 class="text-xl font-bold text-gray-800">Laporan Analisis Kredit</h1>
+        <h1 class="text-xl font-bold text-gray-800">Laporan Realisasi Pinjaman</h1>
     </x-slot>
     <div class="bg-white p-6 rounded-2xl shadow-sm no-print">
         <form method="GET" class="flex gap-4 items-end">
@@ -66,7 +66,7 @@
                     @if ($facility->creditApplications->count() > 0)
                         {{-- HEADER GROUP (NAMA FASILITAS) --}}
                         <tr class="group-header">
-                            <td class="p-2 border" colspan="9">{{ strtoupper($facility->nama) }}</td>
+                            <td class="p-2 border font-bold" colspan="9">{{ strtoupper($facility->nama) }}</td>
                         </tr>
 
                         @php
@@ -110,7 +110,7 @@
                                 <td class="p-2 border">{{ $app->nasabahProfile->nama_lengkap }}</td>
                                 <td class="p-2 border">{{ $app->jangka_waktu }} Bln</td>
                                 <td class="p-2 border text-right">{{ number_format($plafond, 0, ',', '.') }}</td>
-                                <td class="p-2 border">{{ strtoupper($app->status) }}</td>
+                                <td class="p-2 border text-center">{{ strtoupper($app->status) }}</td>
                                 <td class="p-2 border text-right">{{ number_format($pelunasan, 0, ',', '.') }}</td>
                                 <td class="p-2 border text-right" class="text-right">{{ number_format($nettingCair, 0, ',', '.') }}</td>
                                 <td class="p-2 border text-right">{{ number_format($nettingNasabah, 0, ',', '.') }}</td>
@@ -119,12 +119,12 @@
 
                         {{-- BARIS SUB TOTAL --}}
                         <tr class="bg-subtotal">
-                            <td class="p-2 border" colspan="4">SUB TOTAL {{ strtoupper($facility->nama) }}</td>
-                            <td class="p-2 border text-right" class="text-right">{{ number_format($subPlafond, 0, ',', '.') }}</td>
+                            <td class="p-2 border font-bold" colspan="4">SUB TOTAL {{ strtoupper($facility->nama) }}</td>
+                            <td class="p-2 border text-right font-bold" class="text-right">{{ number_format($subPlafond, 0, ',', '.') }}</td>
                             <td class="p-2 border"></td>
-                            <td class="p-2 border text-right">{{ number_format($subPelunasan, 0, ',', '.') }}</td>
-                            <td class="p-2 border text-right">{{ number_format($subNetting, 0, ',', '.') }}</td>
-                            <td class="p-2 border text-right">{{ number_format($subNettingNasabah, 0, ',', '.') }}</td>
+                            <td class="p-2 border text-right font-bold">{{ number_format($subPelunasan, 0, ',', '.') }}</td>
+                            <td class="p-2 border text-right font-bold">{{ number_format($subNetting, 0, ',', '.') }}</td>
+                            <td class="p-2 border text-right font-bold">{{ number_format($subNettingNasabah, 0, ',', '.') }}</td>
                         </tr>
 
                         @php
@@ -141,12 +141,12 @@
             {{-- FOOTER GRAND TOTAL --}}
             <tfoot>
                 <tr class="bg-total">
-                    <td class="p-2 border" colspan="4 text-center">TOTAL KESELURUHAN</td>
-                    <td class="p-2 border text-right">{{ number_format($grandTotalPlafond, 0, ',', '.') }}</td>
+                    <td class="p-2 border font-bold" colspan="4">TOTAL KESELURUHAN</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($grandTotalPlafond, 0, ',', '.') }}</td>
                     <td class="p-2 border"></td>
-                    <td class="p-2 border text-right">{{ number_format($grandTotalPelunasan, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($grandTotalNetting, 0, ',', '.') }}</td>
-                    <td class="p-2 border text-right">{{ number_format($grandTotalNettingNasabah, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($grandTotalPelunasan, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($grandTotalNetting, 0, ',', '.') }}</td>
+                    <td class="p-2 border text-right font-bold">{{ number_format($grandTotalNettingNasabah, 0, ',', '.') }}</td>
                 </tr>
             </tfoot>
         </table>

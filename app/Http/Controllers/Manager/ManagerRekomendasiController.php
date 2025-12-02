@@ -59,7 +59,7 @@ class ManagerRekomendasiController extends Controller
             'manager_id'            => Auth::id(),
             'managed_at'            => now(),
             'recommendation_status' => $request->recommendation_status,
-            'recommended_amount'    => $request->recommended_amount,
+            'recommended_amount_manager' => $request->recommended_amount,
             'recommended_tenor'     => $request->recommended_tenor,
             'manager_note'          => $request->manager_note,
         ]);

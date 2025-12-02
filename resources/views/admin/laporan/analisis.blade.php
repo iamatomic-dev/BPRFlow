@@ -35,7 +35,7 @@
     <div class="mt-6 bg-white p-8 rounded-2xl shadow-sm print:shadow-none">
         <div class="text-center border-b-2 border-gray-800 pb-4 mb-6 hidden print:block">
             <h1 class="text-2xl font-bold uppercase">BPR Parinama Simfoni Indonesia</h1>
-            <h2 class="text-xl font-bold mt-2 underline">LAPORAN HASIL ANALISIS KREDIT</h2>
+            <h2 class="text-xl font-bold mt-2 underline">LAPORAN ANALISIS KREDIT</h2>
         </div>
 
         <table class="w-full text-xs text-left border-collapse">
@@ -46,7 +46,9 @@
                     <th class="p-2 border">Hasil SLIK (Admin)</th>
                     <th class="p-2 border">Rekomendasi Manager</th>
                     <th class="p-2 border">Catatan Manager</th>
-                    <th class="p-2 border">Keputusan Akhir</th>
+                    <th class="p-2 border">Catatan Direktur</th>
+                    <th class="p-2 border">Plafond Disetujui</th>
+                    <th class="p-2 border">Keputusan</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,13 +65,16 @@
                                 {{ $app->recommendation_status }}
                                 @if ($app->recommendation_status == 'Rekomendasi Disetujui')
                                     <br><span class="text-green-600">Plf: Rp
-                                        {{ number_format($app->recommended_amount) }}</span>
+                                        {{ number_format($app->manager_recommended_amount) }}</span>
                                 @endif
                             @else
                                 <span class="text-gray-400">-</span>
                             @endif
                         </td>
                         <td class="p-2 border italic">{{ $app->manager_note ?? '-' }}</td>
+                        <td class="p-2 border italic">{{ $app->direktur_note ?? '-' }}</td>
+                        <td class="p-2 border font-bold text-right">Rp {{ number_format($app->recommended_amount) }}
+                        </td>
                         <td class="p-2 border font-bold text-center">{{ $app->status }}</td>
                     </tr>
                 @endforeach

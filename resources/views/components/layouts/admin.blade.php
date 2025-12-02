@@ -77,7 +77,7 @@
                 <div id="laporanMenu" class="space-y-1 mt-1 {{ $isLaporanActive ? 'block' : 'hidden' }}">
                     <a href="{{ route('admin.laporan.pengajuan') }}"
                         class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.laporan.pengajuan') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
-                        Status Pengajuan
+                        Persetujuan Kredit
                     </a>
 
                     <a href="{{ route('admin.laporan.analisis') }}"

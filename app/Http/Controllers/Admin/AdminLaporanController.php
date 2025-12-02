@@ -15,7 +15,7 @@ class AdminLaporanController extends Controller
 {
     public function pengajuan(Request $request)
     {
-        $query = CreditApplication::with(['nasabahProfile', 'creditFacility']);
+        $query = CreditApplication::with(['nasabahProfile', 'creditFacility', 'collateral']);
 
         $startDate = $request->start_date;
         $endDate = $request->end_date;

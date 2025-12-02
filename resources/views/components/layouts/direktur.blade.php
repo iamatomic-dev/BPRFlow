@@ -71,7 +71,7 @@
                 <div id="laporanMenu" class="space-y-1 mt-1 {{ $isLaporanActive ? 'block' : 'hidden' }}">
                     <a href="{{ route('direktur.laporan.pengajuan') }}"
                         class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('direktur.laporan.pengajuan') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
-                        Status Pengajuan
+                        Persetujuan Kredit
                     </a>
 
                     <a href="{{ route('direktur.laporan.analisis') }}"
@@ -85,8 +85,8 @@
                     </a>
 
                     <a href="{{ route('direktur.laporan.realisasi') }}"
-                        class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('direktur.laporan.nasabah') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
-                        Realisasi
+                        class="block pl-12 pr-4 py-2 rounded-lg transition-colors {{ request()->routeIs('direktur.laporan.realisasi') ? 'text-white bg-[#26354f]' : 'text-gray-400 hover:text-white hover:bg-[#26354f]' }}">
+                        Realisasi Pinjaman
                     </a>
 
                     <a href="{{ route('direktur.laporan.rekapitulasi') }}"

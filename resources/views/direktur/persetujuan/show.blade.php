@@ -136,7 +136,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Plafond Disetujui (Rp)</label>
                                 <input type="number" name="final_amount" 
-                                    value="{{ $application->recommended_amount ?? $application->jumlah_pinjaman }}" 
+                                    value="{{ $application->manager_recommended_amount ?? $application->jumlah_pinjaman }}" 
                                     class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 font-bold text-green-700">
                             </div>
                             <div>
@@ -166,7 +166,7 @@
 
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Catatan Keputusan (Opsional)</label>
-                        <textarea name="note" rows="3" class="w-full rounded-lg border-gray-300 focus:ring-gray-500 text-sm"></textarea>
+                        <textarea name="direktur_note" rows="3" class="w-full rounded-lg border-gray-300 focus:ring-gray-500 text-sm"></textarea>
                     </div>
 
                     <button type="submit"
