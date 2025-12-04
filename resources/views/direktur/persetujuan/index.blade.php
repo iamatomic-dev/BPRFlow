@@ -43,7 +43,7 @@
                     </svg>
                 </div>
 
-                {{-- Tombol Submit (Optional jika user tekan enter di search, tapi bagus ada tombol reset) --}}
+
                 @if (request('status') || request('search'))
                     <a href="{{ route('direktur.persetujuan.index') }}"
                         class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-gray-200 transition flex items-center justify-center">
@@ -95,7 +95,7 @@
                                         'Menunggu Verifikasi' => 'bg-blue-100 text-blue-700',
                                         'Disetujui' => 'bg-green-100 text-green-700',
                                         'Ditolak' => 'bg-red-100 text-red-700',
-                                        'Lunas'   => 'bg-gray-800 text-white',
+                                        'Lunas' => 'bg-gray-800 text-white',
                                     ];
                                     $class = $colors[$app->status] ?? 'bg-gray-100 text-gray-600';
                                 @endphp

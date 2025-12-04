@@ -2,11 +2,11 @@
     if (Auth::user()->hasRole('Direktur')) {
         $layout = 'layouts.direktur';
         $button_link = 'direktur.angsuran.show';
-        $button_text = 'Detail / Reversal';
+        $button_text = 'Detail';
     } elseif (Auth::user()->hasRole('Manager')) {
         $layout = 'layouts.manager';
         $button_link = 'manager.angsuran.show';
-        $button_text = 'Detail';
+        $button_text = 'Detail / Reversal';
     } else {
         $layout = 'layouts.admin';
         $button_link = 'admin.angsuran.show';
@@ -38,7 +38,7 @@
                     </svg>
                 </div>
 
-                {{-- Tombol Submit (Optional jika user tekan enter di search, tapi bagus ada tombol reset) --}}
+
                 @if (request('search'))
                     <a href="{{ route('admin.pengajuan.index') }}"
                         class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-gray-200 transition flex items-center justify-center">

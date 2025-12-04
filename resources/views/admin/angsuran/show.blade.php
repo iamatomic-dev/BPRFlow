@@ -5,24 +5,24 @@
     // Tentukan layout berdasarkan role
     if ($user->hasRole('Direktur')) {
         $layout = 'layouts.direktur';
-        $displayAdminAction = 'display: none;'; // Hide Admin Action column
-        $displayDirekturAction = 'display: table-cell;'; // Show Direktur Action column
+        $displayAdminAction = 'display: none;';
+        $displayManagerAction = 'display: none;';
         $back_link = route('direktur.angsuran.index');
     } elseif ($user->hasRole('Manager')) {
         $layout = 'layouts.manager';
-        $displayAdminAction = 'display: none;'; // Hide Admin Action
-        $displayDirekturAction = 'display: none;'; // Hide Direktur Action
+        $displayAdminAction = 'display: none;';
+        $displayManagerAction = 'display: table-cell;';
         $back_link = route('manager.angsuran.index');
     } else {
         // Admin
         $layout = 'layouts.admin';
-        $displayAdminAction = 'display: table-cell;'; // Show Admin Action column
-        $displayDirekturAction = 'display: none;'; // Hide Direktur Action
+        $displayAdminAction = 'display: table-cell;';
+        $displayManagerAction = 'display: none;';
         $back_link = route('admin.angsuran.index');
     }
 
-    // Tentukan apakah user saat ini adalah Direktur/Admin
-    $isDirektur = $user->hasRole('Direktur');
+    // Tentukan apakah user saat ini adalah Manager/Admin
+    $isManager = $user->hasRole('Manager');
     $isAdmin = $user->hasRole('Admin');
 @endphp
 
@@ -53,7 +53,7 @@
                         <th class="px-4 py-2">Status</th>
                         <th class="px-4 py-2">Reversal Info</th>
                         <th class="px-4 py-2 text-center" style='{{ $displayAdminAction }}'>Aksi</th>
-                        <th class="px-4 py-2 text-center" style='{{ $displayDirekturAction }}'>Aksi</th>
+                        <th class="px-4 py-2 text-center" style='{{ $displayManagerAction }}'>Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -136,7 +136,7 @@
                             </td>
 
                             {{-- KOLOM AKSI DIREKTUR --}}
-                            <td class="px-4 py-2 text-center" style='{{ $displayDirekturAction }}'>
+                            <td class="px-4 py-2 text-center" style='{{ $displayManagerAction }}'>
                                 @if (!$pay->reversal_date && ($pay->status_pembayaran == 'Paid' || $pay->status_pembayaran == 'Partial'))
                                     <button onclick="openReversalModal({{ $pay->id }})"
                                         class="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700">
@@ -206,7 +206,7 @@
 
 
     {{-- MODAL REVERSAL (DIREKTUR) --}}
-    @if ($isDirektur)
+    @if ($isManager)
         <div id="reversalModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
             <div class="flex items-center justify-center min-h-screen px-4">
                 <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeReversalModal()">
@@ -231,7 +231,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Catatan Reversal (Wajib)</label>
-                                <textarea name="reversal_note" rows="3" required
+                                <textarea name="reversal_note" rows="3" required minlength="10"
                                     placeholder="Jelaskan alasan pembatalan (Contoh: Salah input nominal / Transfer fiktif)"
                                     class="w-full border-gray-300 rounded-lg"></textarea>
                             </div>
@@ -254,7 +254,7 @@
     @push('scripts')
         <script>
             // Set up the base URL for the Reversal route (since the controller is DirekturAngsuranController)
-            const REVERSAL_URL = "{{ route('direktur.angsuran.reverse', ['paymentId' => '__ID__']) }}";
+            const REVERSAL_URL = "{{ route('manager.angsuran.reverse', ['paymentId' => '__ID__']) }}";
             const ADMIN_UPDATE_URL = "{{ route('admin.angsuran.update', ['paymentId' => '__ID__']) }}";
 
             // JS untuk Modal Payment (ADMIN)
@@ -273,7 +273,7 @@
             }
 
             // JS untuk Modal Reversal (DIREKTUR)
-            @if ($isDirektur)
+            @if ($isManager)
                 function openReversalModal(paymentId) {
                     document.getElementById('reversalModal').classList.remove('hidden');
 

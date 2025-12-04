@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Direktur;
+namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CreditPayment;
 use Illuminate\Support\Facades\Auth;
 
-class DirekturAngsuranController extends Controller
+class ManagerAngsuranController extends Controller
 {
     /**
      * Membatalkan transaksi pembayaran yang sudah diinput Admin
@@ -36,7 +36,7 @@ class DirekturAngsuranController extends Controller
             'status_pembayaran' => 'Unpaid', // Kembalikan ke status awal
         ]);
 
-        // Opsional: Cek apakah aplikasi induk (credit_application) statusnya jadi tidak lunas
+        // Cek apakah aplikasi induk (credit_application) statusnya jadi tidak lunas
         // Jika statusnya tadinya 'Lunas', kembalikan ke 'Disetujui'
         if ($payment->application->status === 'Lunas') {
             $payment->application->update(['status' => 'Disetujui']);

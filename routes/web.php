@@ -17,10 +17,10 @@ use App\Http\Controllers\Admin\AdminLaporanController;
 
 use App\Http\Controllers\Manager\ManagerDashboardController;
 use App\Http\Controllers\Manager\ManagerRekomendasiController;
+use App\Http\Controllers\Manager\ManagerAngsuranController;
 
 use App\Http\Controllers\Direktur\DirekturDashboardController;
 use App\Http\Controllers\Direktur\DirekturPersetujuanController;
-use App\Http\Controllers\Direktur\DirekturAngsuranController;
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
@@ -53,14 +53,14 @@ Route::middleware(['auth', 'role:Nasabah', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:Nasabah'])->group(function () {
-    
+
     Route::controller(PengajuanKreditController::class)
         ->prefix('pengajuan')
         ->name('pengajuan.')
         ->group(function () {
             Route::get('/step-1', 'createStep1')->name('step1');
             Route::post('/step-1', 'postStep1')->name('step1.post');
-            
+
             Route::get('/step-2', 'createStep2')->name('step2');
             Route::post('/step-2', 'postStep2')->name('step2.post');
             Route::get('/back-step-1', 'backToStep1')->name('back.step1');
@@ -165,6 +165,12 @@ Route::middleware(['auth', 'role:Manager'])
                 Route::get('/', 'index')->name('index');
                 Route::get('/{id}', 'show')->name('show');
             });
+        Route::controller(ManagerAngsuranController::class)
+            ->prefix('angsuran')
+            ->name('angsuran.')
+            ->group(function () {
+                Route::put('/reverse/{paymentId}', 'reverse')->name('reverse');
+            });
         Route::controller(AdminLaporanController::class)
             ->prefix('laporan')
             ->name('laporan.')
@@ -208,12 +214,6 @@ Route::middleware(['auth', 'role:Direktur'])
                 Route::get('/monitoring', 'monitoring')->name('monitoring');
                 Route::get('/realisasi', 'realisasi')->name('realisasi');
                 Route::get('/rekapitulasi', 'rekapitulasi')->name('rekapitulasi');
-            });
-        Route::controller(DirekturAngsuranController::class)
-            ->prefix('angsuran')
-            ->name('angsuran.')
-            ->group(function () {
-                Route::put('/reverse/{paymentId}', 'reverse')->name('reverse');
             });
     });
 
