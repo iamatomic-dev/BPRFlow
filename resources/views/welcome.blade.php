@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPR Parinama Simfoni Indonesia</title>
+    <title>BPR XYZ</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -14,9 +14,8 @@
     <nav class="bg-[#0d1b2a] text-white shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center px-6">
             <div class="flex items-center space-x-3">
-                <img src="{{ asset('images/Logo.png') }}" alt="Logo BPR Parinama" class="w-10 h-10">
                 <h1 class="text-lg md:text-xl font-semibold tracking-wide">
-                    BPR Parinama Simfoni Indonesia
+                    BPR XYZ
                 </h1>
             </div>
 
@@ -38,7 +37,7 @@
         <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
             <div class="md:w-1/2 mb-10 md:mb-0">
                 <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
-                    Selamat Datang di <span class="text-yellow-400">BPR Parinama Simfoni Indonesia</span>
+                    Selamat Datang di <span class="text-yellow-400">BPR XYZ</span>
                 </h2>
                 <p class="text-lg text-gray-300 mb-6">
                     Sahabat Keuangan Terpercaya untuk Mewujudkan Impian Anda. Kami hadir membantu Anda dengan layanan
@@ -78,7 +77,7 @@
     <footer class="bg-[#0d1b2a] text-white py-6 mt-12">
         <div class="container mx-auto text-center text-sm">
             <p>&copy; {{ date('Y') }}
-                <span class="text-yellow-400 font-semibold">BPR Parinama Simfoni Indonesia</span>.
+                <span class="text-yellow-400 font-semibold">BPR XYZ</span>.
             </p>
             <p class="text-gray-400 text-xs mt-2 italic">
                 “Melayani dengan Integritas dan Kepercayaan.”

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Dashboard Admin' }} | BPR Parinama Simfoni Indonesia</title>
+    <title>{{ $title ?? 'Dashboard Admin' }} | BPR XYZ</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- Font Awesome --}}
@@ -23,10 +23,8 @@
         class="fixed top-0 left-0 z-50 h-screen w-64 bg-[#0d1b2a] text-white transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0">
 
         <div class="h-16 flex items-center justify-center border-b border-gray-700 px-6 gap-3 bg-[#0d1b2a]">
-            <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-8 h-8 object-contain">
             <div class="text-left">
-                <h2 class="text-base font-bold leading-tight">BPR Parinama</h2>
-                <p class="text-[10px] text-gray-400 tracking-wider">SIMFONI INDONESIA</p>
+                <h2 class="text-base font-bold leading-tight">BPR XYZ</h2>
             </div>
             <button id="closeSidebar" class="md:hidden ml-auto text-gray-400 hover:text-white">
                 <i class="fa-solid fa-times text-xl"></i>
@@ -158,7 +156,7 @@
         </main>
 
         <footer class="p-6 text-center text-xs text-gray-400">
-            &copy; {{ date('Y') }} BPR Parinama Simfoni Indonesia. All rights reserved.
+            &copy; {{ date('Y') }} BPR XYZ. All rights reserved.
         </footer>
     </div>
 

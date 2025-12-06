@@ -34,7 +34,7 @@
 
     <div class="mt-6 bg-white p-8 rounded-2xl shadow-sm print:shadow-none">
         <div class="text-center border-b-2 border-gray-800 pb-4 mb-6 hidden print:block">
-            <h1 class="text-2xl font-bold uppercase">BPR Parinama Simfoni Indonesia</h1>
+            <h1 class="text-2xl font-bold uppercase">BPR XYZ</h1>
             <h2 class="text-xl font-bold mt-2 underline">LAPORAN ANALISIS KREDIT</h2>
         </div>
 

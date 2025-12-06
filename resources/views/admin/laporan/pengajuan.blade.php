@@ -44,7 +44,7 @@
 
     <div class="mt-6 bg-white p-8 rounded-2xl shadow-sm print:shadow-none">
         <div class="text-center border-b-2 border-gray-800 pb-4 mb-6 hidden print:block">
-            <h1 class="text-2xl font-bold uppercase">BPR Parinama Simfoni Indonesia</h1>
+            <h1 class="text-2xl font-bold uppercase">BPR XYZ</h1>
             <h2 class="text-xl font-bold mt-2 underline">LAPORAN STATUS PENGAJUAN KREDIT</h2>
         </div>
 
@@ -73,7 +73,8 @@
                             {{ $app->recommended_tenor ?? $app->jangka_waktu }} Bln
                         </td>
                         <td class="text-center p-3 border">{{ $app->collateral->jenis_agunan ?? '-' }}</td>
-                        <td class="text-right p-3 border">Rp {{ number_format($app->jumlah_pinjaman, 0, ',', '.') }}</td>
+                        <td class="text-right p-3 border">Rp {{ number_format($app->jumlah_pinjaman, 0, ',', '.') }}
+                        </td>
                         <td class="text-right p-3 border">
                             @if ($app->status == 'Disetujui' || $app->status == 'Lunas')
                                 Rp {{ number_format($app->recommended_amount ?? $app->jumlah_pinjaman, 0, ',', '.') }}
@@ -81,9 +82,11 @@
                                 -
                             @endif
                         </td>
-                        <td class="text-center p-3 border">{{ $app->submitted_at ? $app->submitted_at->format('d/m/Y') : '-' }}
+                        <td class="text-center p-3 border">
+                            {{ $app->submitted_at ? $app->submitted_at->format('d/m/Y') : '-' }}
                         </td>
-                        <td class="text-center p-3 border">{{ $app->tgl_akad ? $app->tgl_akad->format('d/m/Y') : '-' }}</td>
+                        <td class="text-center p-3 border">{{ $app->tgl_akad ? $app->tgl_akad->format('d/m/Y') : '-' }}
+                        </td>
                         <td class="p-3 border text-center">
                             <span
                                 class="px-2 py-1 rounded text-xs font-bold border {{ $app->status == 'Disetujui' ? 'bg-green-100 text-green-700 border-green-200' : ($app->status == 'Ditolak' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-blue-100 text-blue-700 border-blue-200') }}">

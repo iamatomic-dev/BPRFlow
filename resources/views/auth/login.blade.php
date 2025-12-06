@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | BPR Parinama Simfoni Indonesia</title>
+    <title>Login | BPR XYZ</title>
     {!! NoCaptcha::renderJs() !!}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -18,9 +18,8 @@
     <!-- Header -->
     <header class="flex items-center justify-between w-full max-w-5xl mb-12 z-10">
         <div class="flex items-center space-x-4">
-            <img src="{{ asset('images/Logo.png') }}" alt="Logo BPR Parinama" class="w-20 h-20">
             <h1 class="text-white text-2xl md:text-3xl font-bold whitespace-nowrap">
-                BPR Parinama Simfoni Indonesia
+                BPR XYZ
             </h1>
         </div>
         <div class="flex items-center space-x-3">

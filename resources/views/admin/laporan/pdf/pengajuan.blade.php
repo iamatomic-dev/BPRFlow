@@ -79,8 +79,8 @@
 
     {{-- KOP LAPORAN --}}
     <div class="header">
-        <h1>BPR Parinama Simfoni Indonesia</h1>
-        <p>Jalan Terusan Buah Batu No.25, Bandung 40266, Jawa Barat</p>
+        <h1>BPR XYZ</h1>
+
     </div>
 
     {{-- JUDUL & PERIODE --}}
@@ -110,27 +110,27 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($applications as $app)
-            <tr>
-                <td>{{ $app->no_pengajuan }}</td>
-                <td>{{ $app->nasabahProfile->nama_lengkap ?? '-' }}</td>
-                <td>{{ $app->creditFacility->nama ?? '-' }}</td>
-                <td class="text-center">
-                    {{ $app->recommended_tenor ?? $app->jangka_waktu }} Bln
-                </td>
-                <td class="text-center">{{ $app->collateral->jenis_agunan ?? '-' }}</td>
-                <td class="text-right">Rp {{ number_format($app->jumlah_pinjaman, 0, ',', '.') }}</td>
-                <td class="text-right">
-                    @if($app->status == 'Disetujui' || $app->status == 'Lunas')
-                        Rp {{ number_format($app->recommended_amount ?? $app->jumlah_pinjaman, 0, ',', '.') }}
-                    @else
-                        -
-                    @endif
-                </td>
-                <td class="text-center">{{ $app->submitted_at ? $app->submitted_at->format('d/m/Y') : '-' }}</td>
-                <td class="text-center">{{ $app->tgl_akad ? $app->tgl_akad->format('d/m/Y') : '-' }}</td>
-                <td class="text-center font-bold">{{ strtoupper($app->status) }}</td>
-            </tr>
+            @foreach ($applications as $app)
+                <tr>
+                    <td>{{ $app->no_pengajuan }}</td>
+                    <td>{{ $app->nasabahProfile->nama_lengkap ?? '-' }}</td>
+                    <td>{{ $app->creditFacility->nama ?? '-' }}</td>
+                    <td class="text-center">
+                        {{ $app->recommended_tenor ?? $app->jangka_waktu }} Bln
+                    </td>
+                    <td class="text-center">{{ $app->collateral->jenis_agunan ?? '-' }}</td>
+                    <td class="text-right">Rp {{ number_format($app->jumlah_pinjaman, 0, ',', '.') }}</td>
+                    <td class="text-right">
+                        @if ($app->status == 'Disetujui' || $app->status == 'Lunas')
+                            Rp {{ number_format($app->recommended_amount ?? $app->jumlah_pinjaman, 0, ',', '.') }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td class="text-center">{{ $app->submitted_at ? $app->submitted_at->format('d/m/Y') : '-' }}</td>
+                    <td class="text-center">{{ $app->tgl_akad ? $app->tgl_akad->format('d/m/Y') : '-' }}</td>
+                    <td class="text-center font-bold">{{ strtoupper($app->status) }}</td>
+                </tr>
             @endforeach
         </tbody>
     </table>

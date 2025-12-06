@@ -83,8 +83,8 @@
 
     {{-- KOP LAPORAN --}}
     <div class="header">
-        <h1>BPR Parinama Simfoni Indonesia</h1>
-        <p>Jalan Terusan Buah Batu No.25, Bandung 40266, Jawa Barat</p>
+        <h1>BPR XYZ</h1>
+
 
     </div>
 
